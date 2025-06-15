@@ -1,0 +1,121 @@
+.contactWrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px;
+    margin: 50px auto 30px;
+}
+
+.contactWrapper .contactForm{
+    width: 55%;
+}
+
+.contactWrapper h2{
+    margin-bottom: 5px;
+}
+
+.contactWrapper  p{
+    margin-bottom: 35px;
+    font-size: var(--text-small-font-size);
+}
+
+.contactWrapper .input-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.contactWrapper .input-group div {
+    width: 48%;
+}
+
+.contactWrapper .input-group input,
+.contactWrapper .input-group textarea {
+    width: 100%;
+    border: 1px solid var(--color-border-gray);
+    border-radius: 3px;
+    padding: 12px 20px;
+    font-size: var(--text-primary-small-font-size);
+    color: var(--color-primary-text);
+    outline: none;
+    font-family: var( --text-font-family);
+}
+
+.contactWrapper .input-group input:focus,
+.contactWrapper .input-group textarea:focus {
+    border-color: var(--color-hover);
+}
+
+.contactWrapper .input-group input::placeholder,
+.contactWrapper .input-group textarea::placeholder {
+    text-transform: capitalize;
+}
+
+.contactWrapper .input-group textarea {
+    height: 200px;
+}
+
+.contactWrapper .contactForm button {
+    padding: 10px 50px;
+    border-radius: 30px;
+    font-size: var(--text-mini-font-size);
+    text-transform: capitalize;
+    color: var(--color-secondary-text);
+    cursor: pointer;
+    background-color: var(--color-light-gray);
+    border: 1px solid var(--color-primary-text);
+    transition: .3s ease;
+}
+
+.contactWrapper .contactForm button:hover {
+    background-color: var(--color-secondary-text);
+    color: var(--color-white);
+}
+
+.contactWrapper .contactAddress {
+   width: 35%;
+}
+
+.contactWrapper .contactAddress ul{
+   list-style: none;
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+   gap: 20px;
+   flex-direction: column;
+   font-size: var(--text-small-font-size);
+}
+
+.contactWrapper .contactAddress ul li{
+   line-height: 1.5;
+}
+
+.contactWrapper .contactAddress ul li span{
+   font-weight: 600;
+}
+
+@media (max-width: 990px) {
+    .contactWrapper {
+        padding: 20px;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 500px) {
+    .contactWrapper {
+        padding: 30px;
+        flex-wrap: wrap;
+    }
+
+    .contactWrapper .contactForm{
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .contactWrapper .contactAddress{
+        width: 100%;
+    }
+}

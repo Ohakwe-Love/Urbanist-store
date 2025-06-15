@@ -1,0 +1,338 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section {
+    padding: 80px 0;
+}
+
+/* About Company Section */
+.about-company {
+    background-color: var(--color-light-gray);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-company-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.about-company-text {
+    flex: 1;
+}
+
+.about-company-text h2 {
+    font-size: var(--text-large-font-size);
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+}
+
+.about-company-text p {
+    font-size: var(--text-mini-font-size);
+    margin-bottom: 20px;
+    color: var(--color-primary-text);
+}
+
+.about-company-image {
+    flex: 1;
+    position: relative;
+}
+
+.about-company-image .image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.image-box {
+    height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-primary);
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Services Section */
+.services {
+    background-color: var(--color-white);
+}
+
+.services .services-intro {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+}
+
+.services .services-intro h3 {
+    font-size: var(--text-big-font-size);
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+    text-transform: capitalize;
+}
+
+.services .services-intro p {
+    font-size: var(--text-mini-font-size);
+    color: var(--color-primary-text);
+}
+
+.services .services-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.services .service-card {
+    width: 23%;
+    height: 300px;
+    background-color: var(--color-light-gray);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-secondary);
+}
+
+.services .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-primary);
+}
+
+.services .service-icon {
+    width: 70px;
+    height: 70px;
+    background-color: var(--primary-color);
+    color: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+}
+
+.services .service-card h4 {
+    font-size: var(--text-medium-font-size);
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.services .service-card p {
+    font-size: var(--text-small-font-size);
+    color: var(--color-primary-text);
+}
+
+@media (max-width: 992px) {
+    .about-company-content {
+        flex-direction: column;
+    }
+    
+    .section {
+        padding: 60px 0;
+    }
+
+    .services .service-card {
+        width: 48%;
+        height: 300px;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .services .service-card {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* Stats Section */
+.stats {
+    background-color: var(--secondary-color);
+    color: var(--color-white);
+    position: relative;
+}
+
+.stats-intro {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+}
+
+.stats-title {
+    color: var(--color-white);
+    margin-bottom: 10px;
+    font-size: var(--text-large-font-size);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    text-align: center;
+}
+
+.stat-card {
+    padding: 30px 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.stat-number {
+    font-size: var(--text-large-font-size);
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: var(--text-mini-font-size);
+    text-transform: capitalize;
+    letter-spacing: 1px;
+}
+
+/* Testimonials Section */
+.testimonials {
+    background-color: var(--color-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-slider {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.testimonial-slide {
+    background-color: var(--color-light-gray);
+    border-radius: 8px;
+    padding: 40px;
+    margin: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-secondary);
+    display: none;
+}
+
+.testimonial-slide.active {
+    display: block;
+}
+
+.testimonial-content {
+    font-size: var(--text-mini-font-size);
+    font-style: italic;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.testimonial-content::before {
+    content: '"';
+    font-size: 60px;
+    color: var(--primary-color);
+    opacity: 0.3;
+    position: absolute;
+    top: -20px;
+    left: -15px;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.author-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.author-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.author-info h4 {
+    font-size: var(--text-small-font-size);
+    margin-bottom: 5px;
+}
+
+.author-info p {
+    font-size: var(--text-primary-small-font-size);
+    color: var(--color-dark-gray);
+}
+
+.testimonial-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.slider-dots {
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--color-dark-gray);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: var(--primary-color);
+}
+
+.slider-arrows {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.arrow:hover {
+    background-color: var(--color-hover);
+}
+
+@media (max-width: 992px) {
+    .about-company-content {
+    flex-direction: column;
+    }
+    
+    .section {
+    padding: 60px 0;
+    }
+}
