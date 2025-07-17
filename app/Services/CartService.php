@@ -2,242 +2,146 @@
 
 namespace App\Services;
 
-use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
-use App\Models\ProductVariant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
-use App\Events\CartUpdated;
 
 class CartService
 {
-    protected Cart $cart;
-
-    public function __construct()
+    private function getCartIdentifier(): array
     {
-        $this->cart = $this->getOrCreateCart();
+        if (Auth::check()) {
+            return ['user_id' => Auth::id()];
+        }
+        
+        return ['session_id' => Session::getId()];
     }
 
-    public function getCart(): Cart
+    public function getCartItems()
     {
-        return $this->cart->load(['items.product', 'items.variant']);
+        return CartItem::where($this->getCartIdentifier())
+            ->with('product')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
-    public function addItem(int $productId, int $quantity = 1, ?int $variantId = null): CartItem
+    public function addToCart(int $productId, int $quantity = 1, array $options = []): bool
     {
-        $product = Product::findOrFail($productId);
-        $variant = $variantId ? ProductVariant::findOrFail($variantId) : null;
+        $product = Product::find($productId);
+        
+        if (!$product) {
+            return false;
+        }
 
-        // Validate stock availability
-        $this->validateStock($product, $variant, $quantity);
-
-        // Check if item already exists in cart
-        $existingItem = $this->cart->items()
+        $identifier = $this->getCartIdentifier();
+        $cartItem = CartItem::where($identifier)
             ->where('product_id', $productId)
-            ->where('variant_id', $variantId)
+            ->where('product_options', json_encode($options))
             ->first();
 
-        if ($existingItem) {
-            return $this->updateItemQuantity($existingItem->id, $existingItem->quantity + $quantity);
+        if ($cartItem) {
+            $cartItem->increment('quantity', $quantity);
+        } else {
+            CartItem::create(array_merge($identifier, [
+                'product_id' => $productId,
+                'product_name' => $product->title,
+                'price' => $product->price,
+                'quantity' => $quantity,
+                'product_options' => $options
+            ]));
         }
 
-        // Create new cart item
-        $unitPrice = $this->calculatePrice($product, $variant);
-        $cartItem = $this->cart->items()->create([
-            'product_id' => $productId,
-            'variant_id' => $variantId,
-            'quantity' => $quantity,
-            'unit_price' => $unitPrice,
-            'total_price' => $unitPrice * $quantity,
-            'product_snapshot' => $this->createProductSnapshot($product, $variant)
-        ]);
-
-        $this->broadcastCartUpdate();
-        
-        return $cartItem;
+        return true;
     }
 
-    public function updateItemQuantity(int $cartItemId, int $quantity): CartItem
+    public function isInCart(int $productId): bool
     {
-        $cartItem = $this->cart->items()->findOrFail($cartItemId);
-        
+        return CartItem::where($this->getCartIdentifier())
+            ->where('product_id', $productId)
+            ->exists();
+    }
+
+    public function updateQuantity(int $cartItemId, int $quantity): bool
+    {
+        $cartItem = CartItem::where($this->getCartIdentifier())
+            ->where('id', $cartItemId)
+            ->first();
+
+        if (!$cartItem) {
+            return false;
+        }
+
         if ($quantity <= 0) {
-            return $this->removeItem($cartItemId);
+            return $this->removeFromCart($cartItemId);
         }
 
-        // Validate stock
-        $this->validateStock($cartItem->product, $cartItem->variant, $quantity);
-
-        $cartItem->update([
-            'quantity' => $quantity,
-            'total_price' => $cartItem->unit_price * $quantity
-        ]);
-
-        $this->broadcastCartUpdate();
-        
-        return $cartItem;
+        $cartItem->update(['quantity' => $quantity]);
+        return true;
     }
 
-    public function removeItem(int $cartItemId): bool
+    public function removeFromCart(int $cartItemId): bool
     {
-        $cartItem = $this->cart->items()->findOrFail($cartItemId);
-        $result = $cartItem->delete();
-        
-        $this->broadcastCartUpdate();
-        
-        return $result;
+        return CartItem::where($this->getCartIdentifier())
+            ->where('id', $cartItemId)
+            ->delete() > 0;
     }
 
     public function clearCart(): bool
     {
-        $result = $this->cart->items()->delete();
-        $this->broadcastCartUpdate();
+        return CartItem::where($this->getCartIdentifier())->delete() > 0;
+    }
+
+    public function getCartCount(): int
+    {
+        return CartItem::where($this->getCartIdentifier())->sum('quantity');
+    }
+
+    public function getCartTotal(): float
+    {
+        return CartItem::where($this->getCartIdentifier())
+            ->get()
+            ->sum('subtotal');
+    }
+
+    public function getCartSummary(): array
+    {
+        $items = $this->getCartItems();
         
-        return $result;
+        return [
+            'items' => $items,
+            'count' => $items->sum('quantity'),
+            'total' => $items->sum('subtotal'),
+            'isEmpty' => $items->isEmpty()
+        ];
     }
 
-    public function syncPrices(): void
-    {
-        $this->cart->items->each(function (CartItem $item) {
-            $currentPrice = $this->calculatePrice($item->product, $item->variant);
-            
-            if ($item->unit_price != $currentPrice) {
-                $item->update([
-                    'unit_price' => $currentPrice,
-                    'total_price' => $currentPrice * $item->quantity
-                ]);
-            }
-        });
-
-        $this->broadcastCartUpdate();
-    }
-
-    public function validateCartItems(): array
-    {
-        $issues = [];
-
-        $this->cart->items->each(function (CartItem $item) use (&$issues) {
-            // Check if product is still available
-            if (!$item->product->is_active) {
-                $issues[] = [
-                    'type' => 'unavailable',
-                    'item_id' => $item->id,
-                    'message' => "Product '{$item->product->name}' is no longer available"
-                ];
-                return;
-            }
-
-            // Check stock availability
-            if (!$item->hasStockAvailable()) {
-                $availableStock = $item->variant 
-                    ? $item->variant->stock_quantity 
-                    : $item->product->stock_quantity;
-                    
-                $issues[] = [
-                    'type' => 'insufficient_stock',
-                    'item_id' => $item->id,
-                    'available_quantity' => $availableStock,
-                    'message' => "Only {$availableStock} items available for '{$item->product->name}'"
-                ];
-            }
-
-            // Check price changes
-            $currentPrice = $this->calculatePrice($item->product, $item->variant);
-            if ($item->unit_price != $currentPrice) {
-                $issues[] = [
-                    'type' => 'price_change',
-                    'item_id' => $item->id,
-                    'old_price' => $item->unit_price,
-                    'new_price' => $currentPrice,
-                    'message' => "Price changed for '{$item->product->name}'"
-                ];
-            }
-        });
-
-        return $issues;
-    }
-
-    public function mergeCarts(Cart $guestCart): void
+    public function mergeGuestCart(string $sessionId): void
     {
         if (!Auth::check()) {
             return;
         }
 
-        DB::transaction(function () use ($guestCart) {
-            foreach ($guestCart->items as $guestItem) {
-                $existingItem = $this->cart->items()
-                    ->where('product_id', $guestItem->product_id)
-                    ->where('variant_id', $guestItem->variant_id)
-                    ->first();
+        $guestItems = CartItem::where('session_id', $sessionId)->get();
+        
+        foreach ($guestItems as $guestItem) {
+            $existingItem = CartItem::where('user_id', Auth::id())
+                ->where('product_id', $guestItem->product_id)
+                ->where('product_options', $guestItem->product_options)
+                ->first();
 
-                if ($existingItem) {
-                    $newQuantity = $existingItem->quantity + $guestItem->quantity;
-                    $this->updateItemQuantity($existingItem->id, $newQuantity);
-                } else {
-                    $this->addItem(
-                        $guestItem->product_id,
-                        $guestItem->quantity,
-                        $guestItem->variant_id
-                    );
-                }
+            if ($existingItem) {
+                $existingItem->increment('quantity', $guestItem->quantity);
+            } else {
+                $guestItem->update([
+                    'user_id' => Auth::id(),
+                    'session_id' => null
+                ]);
             }
-
-            $guestCart->delete();
-        });
-    }
-
-    protected function getOrCreateCart(): Cart
-    {
-        if (Auth::check()) {
-            return Cart::firstOrCreate(
-                ['user_id' => Auth::id()],
-                ['expires_at' => now()->addDays(30)]
-            );
         }
 
-        $sessionId = Session::getId();
-        
-        return Cart::firstOrCreate(
-            ['session_id' => $sessionId],
-            ['expires_at' => now()->addDays(7)]
-        );
-    }
-
-    protected function validateStock(Product $product, ?ProductVariant $variant, int $quantity): void
-    {
-        $availableStock = $variant ? $variant->stock_quantity : $product->stock_quantity;
-        
-        if ($quantity > $availableStock) {
-            throw new \Exception("Insufficient stock. Only {$availableStock} items available.");
-        }
-    }
-
-    protected function calculatePrice(Product $product, ?ProductVariant $variant): float
-    {
-        $basePrice = $product->price;
-        $variantAdjustment = $variant?->price_adjustment ?? 0;
-        
-        // Apply any active promotions here
-        // $promotionalPrice = $this->applyPromotions($basePrice + $variantAdjustment, $product);
-        
-        return $basePrice + $variantAdjustment;
-    }
-
-    protected function createProductSnapshot(Product $product, ?ProductVariant $variant): array
-    {
-        return [
-            'name' => $product->name,
-            'image' => $product->featured_image,
-            'variant_name' => $variant?->name,
-            'variant_attributes' => $variant?->attributes,
-            'captured_at' => now()->toISOString()
-        ];
-    }
-
-    protected function broadcastCartUpdate(): void
-    {
-        broadcast(new CartUpdated($this->cart))->toOthers();
+        CartItem::where('session_id', $sessionId)
+            ->where('user_id', Auth::id())
+            ->delete();
     }
 }

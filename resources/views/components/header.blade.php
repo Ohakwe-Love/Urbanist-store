@@ -39,7 +39,7 @@
                 <span class="user-action-tag-text">Wishlist</span>
             </a>
             
-            <x-cart-icon :cartCount="$cartCount ?? 0" />
+            <x-cart-icon  />
 
             @auth
                 <a href="{{route('dashboard')}}" title="Account" class="user-action-tag user-action-tag-icon">

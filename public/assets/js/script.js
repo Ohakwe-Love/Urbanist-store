@@ -105,6 +105,8 @@ mobileMenuClose.addEventListener('click', () => {
 
 // overlay click event
 overlay.addEventListener('click', () => {
+    const cartMenu = document.getElementById('cart-menu');
+
     // Close mobile menu if it's open
     if (mobileMenu.classList.contains('active')) {
         mobileMenu.classList.remove('active');
@@ -121,6 +123,7 @@ overlay.addEventListener('click', () => {
 
     // Hide overlay and restore scrolling
     overlay.classList.remove('active');
+    overlay.style.display = 'none';
     document.body.style.overflow = 'auto';
 });
 

@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\User;
+use App\Models\Cart;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\AuthUserRequest;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Services\CartService;
+
 
 
 
@@ -54,9 +58,19 @@ class AuthController extends Controller
             return redirect()->intended(route('home'))->with('success', 'You are logged in!');
         }
 
+        if (Auth::check()) {
+            CartItem::mergeCarts(session()->getId(), Auth::id());
+        }
+
         return back()->withErrors([
             'login' => 'The provided credentials do not match our records!',
         ])->onlyInput('login');
+    }
+
+    public function authenticated(Request $request, $user)
+    {
+        $cartService = app(CartService::class);
+        $cartService->mergeGuestCart(Session::getId());
     }
 
     public function logout(Request $request): RedirectResponse

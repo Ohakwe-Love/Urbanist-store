@@ -11,7 +11,7 @@
         </div>
 
         <div class="search-policies">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><img src="{{asset('assets/images/icons/search.svg')}}" alt=""></span>
             <input type="text" placeholder="Search our policies...">
         </div>
 
@@ -301,7 +301,7 @@
         </div>
 
         <div class="last-updated">
-            <p>Last updated: May 21, 2025</p>
+            {{-- <p>Last updated: May 21, 2025</p> --}}
         </div>
     </div>
 

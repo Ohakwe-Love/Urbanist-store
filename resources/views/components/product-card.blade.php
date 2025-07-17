@@ -14,6 +14,9 @@
     'size' => null,
 ])
 
+@inject('cartService', 'App\Services\CartService')
+
+
 @php
     $user = auth()->user();
     $isInWishlist = $user && $user->isInWishlist($productId);
@@ -45,7 +48,21 @@
                 <a href="{{ $link }}" title="view"><i class="fa-solid fa-images"></i></a>
             </div>
 
-            <x-add-to-cart :product="$product" />
+            @php
+                $cartItemForThisProduct = \App\Models\CartItem::where('product_id', $product->id)
+                    ->where(function($query) {
+                        $query->where('session_id', session()->getId())
+                            ->orWhere('user_id', auth()->id());
+                    })->first();
+            @endphp
+
+            <x-add-to-cart 
+                {{-- :product="$product"
+                :inCart="$cartService->isInCart($product->id)" --}}
+                :product="$product"
+                :cartItem="$cartItemForThisProduct ?? null"
+                :inCart="$cartService->isInCart($product->id)"
+            />
         </div>
 
         <div class="product-content">

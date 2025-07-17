@@ -33,6 +33,15 @@ Route::get('/news', [PageController::class, 'news'])->name('news');
 // policies page route
 Route::get('/policies', [PageController::class, 'policies'])->name('policies');
 
+// Returns page route
+Route::get('/returns', [PageController::class, 'returns'])->name('returns');
+
+// Cookies page route
+Route::get('/cookies', [PageController::class, 'cookies'])->name('cookies');
+
+// how-to-order page route
+Route::get('/how-to-order', [PageController::class, 'howToOrder'])->name('how-to-order');
+
 // shop page route
 Route::get('/shop', [ProductController::class, 'index'])->name('shop');
 
@@ -81,34 +90,50 @@ Route::middleware('auth')->prefix('user')->group(function () {
         Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle')->middleware('throttle:60,1');
     });
 
-    // Cart routes
-    Route::prefix('cart')->name('cart.')->group(function () {
-        // Get cart items (for AJAX cart menu updates)
-        Route::get('/', [CartController::class, 'index'])->name('index');
-
-        Route::get('/menu', [CartController::class, 'menu'])->name('menu');
-
-        
-        // Add item to cart
-        Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
-        
-        // Update cart item quantity
-        Route::patch('/update/{product}', [CartController::class, 'update'])->name('update');
-        
-        // Remove item from cart
-        Route::delete('/remove/{product}', [CartController::class, 'remove'])->name('remove');
-        
-        // Clear entire cart
-        Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
-        
-        // Get cart count (for AJAX updates)
-        Route::get('/count', [CartController::class, 'count'])->name('count');
-    });
-
-    // Route::get('/cart', [CartController::class, 'index'])->name('cart');
-
     // Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     // Route::get('/addresses', [AddressController::class, 'index'])->name('addresses');
     // Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
     // Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+});
+
+
+// Cart routes
+
+Route::prefix('cart')->name('cart.')->group(function () {
+    // add to cart 
+    Route::post('/add', [CartController::class, 'add'])->name('add');
+
+    // update cart
+    Route::patch('/update', [CartController::class, 'update'])->name('update');
+
+    // remove from cart
+    Route::delete('/remove', [CartController::class, 'remove'])->name('remove');
+
+    // clear cart 
+    Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
+
+    // summary
+    Route::get('/summary', [CartController::class, 'summary'])->name('summary');
+
+    // Get cart items (for AJAX cart menu updates)
+    // Route::get('/', [CartController::class, 'index'])->name('index');
+
+    // Route::get('/menu', [CartController::class, 'menu'])->name('menu');
+
+    // // Add item to cart
+    // Route::post('/add', [CartController::class, 'store'])->name('store');
+    
+    // // Update cart item quantity
+    // Route::put('/{product}', [CartController::class, 'update'])->name('update');
+
+    
+    // // Remove item from cart
+    // Route::delete('/{product}', [CartController::class, 'destroy'])->name('destroy');
+
+    
+    // // Clear entire cart
+    // Route::delete('/', [CartController::class, 'clear'])->name('clear');
+    
+    // // Get cart count (for AJAX updates)
+    // Route::get('/count', [CartController::class, 'count'])->name('count');
 });

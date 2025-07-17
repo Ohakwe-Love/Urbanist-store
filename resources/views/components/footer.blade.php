@@ -27,9 +27,9 @@
             <ul class="footer-links">
             <li><a href="#">Help Center</a></li>
             <li><a href="#">Shipping Info</a></li>
-            <li><a href="#">Returns</a></li>
-            <li><a href="#">How To Order</a></li>
-            <li><a href="#">Cookies</a></li>
+            <li><a href="{{route('returns')}}">Returns</a></li>
+            <li><a href="{{route('how-to-order')}}">How To Order</a></li>
+            <li><a href="{{route(name: 'cookies')}}">Cookies</a></li>
             <li><a href="{{route('policies')}}">Policies</a></li>
             </ul>
         </div>

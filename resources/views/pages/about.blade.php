@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">About Urbanist</x-slot>
+    <x-slot name="title">About Urbanist || A Modern Service</x-slot>
 
     @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/about.css') }}">

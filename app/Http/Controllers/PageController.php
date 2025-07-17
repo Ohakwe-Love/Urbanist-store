@@ -41,4 +41,22 @@ class PageController extends Controller
     {
         return view('pages.policies');
     }
+
+    // returns Page
+    public function returns()
+    {
+        return view('pages.returns');
+    }
+
+    // cookies Page
+    public function cookies()
+    {
+        return view('pages.cookies');
+    }
+
+    // cookies Page
+    public function howToOrder()
+    {
+        return view('pages.how-to-order');
+    }
 }

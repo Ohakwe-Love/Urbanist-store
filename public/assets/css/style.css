@@ -666,6 +666,7 @@ nav ul a.active {
 
 .cart-item-quantity {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     border: 1px solid var(--color-border-gray);
     border-radius: 5px;
@@ -1674,12 +1675,11 @@ https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=fo
     transition: transform 0.5s ease, opacity 0.5s ease, bottom 0.5s ease;
 }
 
-.product-card .product-bottom-overlay button {
+.product-card .product-bottom-overlay .add-to-cart-btn {
     width: 90%;
     padding: 12px;
     background-color: var(--color-secondary-text);
     color: var(--color-white);
-    transition: .5s ease;
     border-radius: 5px;
     font-size: 10px;
     font-weight: 600;
@@ -1689,11 +1689,22 @@ https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=fo
     justify-content: center;
     cursor: pointer;
     border: none;
+    transition: all 0.5s ease;
+
 }
 
-.product-card .product-bottom-overlay button:hover {
+.product-card .product-bottom-overlay .add-to-cart-btn:hover {
     background-color: var(--color-hover);
 }
+
+.add-to-cart-btn.in-cart {
+    background-color: #dc3545;
+}
+
+.add-to-cart-btn.in-cart:hover {
+    background-color: #c82333;
+}
+
 
 .product-card:hover .product-right-overlay {
     right: 20px;
@@ -1707,15 +1718,6 @@ https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=fo
 .product-card:hover .product-bottom-overlay {
     bottom: 20px;
     opacity: 1;
-}
-
-.product-card .add-to-cart-btn.disabled {
-    background-color: var(--color-danger);
-    cursor: not-allowed;
-}
-
-.product-card .add-to-cart-btn.disabled:hover {
-    background-color: var(--color-danger);
 }
 
 .product-card .product-content {

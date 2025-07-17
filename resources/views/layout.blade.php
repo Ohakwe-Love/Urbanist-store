@@ -142,7 +142,8 @@
     <!-- scripts -->
     <script src="{{ asset('assets/js/script.js') }}?v={{ time() }}"></script>
     <script src="{{ asset('assets/js/wishlist.js') }}"></script>
-    <script src="{{ asset('assets/js/cart.js') }}?v={{ time() }}"></script>
+    {{-- <script src="{{ asset('assets/js/cart.js') }}?v={{ time() }}"></script> --}}
+    <script src="{{ asset('assets/js/cart-manager.js') }}?v={{ time() }}"></script>
 
     {{-- Additional Scripts --}}
     @stack('scripts')
