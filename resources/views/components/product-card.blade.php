@@ -62,6 +62,9 @@
                 :product="$product"
                 :cartItem="$cartItemForThisProduct ?? null"
                 :inCart="$cartService->isInCart($product->id)"
+                {{-- :product="$product"
+                :cartItem="$cartItems[$product->id] ?? null"
+                :inCart="isset($cartItems[$product->id])" --}}
             />
         </div>
 

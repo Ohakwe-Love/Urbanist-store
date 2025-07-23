@@ -11,13 +11,7 @@
             <p class="welcome-subtext">Manage your orders, wishlist, and account settings here.</p>
         </div>
 
-        <div class="sidebar-toggle">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </div>
+        <x-dashboard-sidebar-toggle />
     </div>
 
     <div class="dashboard-content">

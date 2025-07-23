@@ -9,6 +9,7 @@ use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\WishlistController;
+use App\Http\Controllers\User\ProfileController;
 
 // Public routes
 
@@ -58,7 +59,6 @@ Route::middleware('guest')->group(function () {
     Route::controller(AuthController::class)
     ->prefix('register')
     ->group(function(){
-        
         Route::get('/', 'register')->name('register');
 
         Route::post('/', 'store')->name('register.store');
@@ -93,7 +93,9 @@ Route::middleware('auth')->prefix('user')->group(function () {
     // Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     // Route::get('/addresses', [AddressController::class, 'index'])->name('addresses');
     // Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
-    // Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+    Route::get('/profile/edit', [ProfileController::class, 'showProfileEditForm'])->name('profileEdit');
 });
 
 
@@ -114,26 +116,4 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
     // summary
     Route::get('/summary', [CartController::class, 'summary'])->name('summary');
-
-    // Get cart items (for AJAX cart menu updates)
-    // Route::get('/', [CartController::class, 'index'])->name('index');
-
-    // Route::get('/menu', [CartController::class, 'menu'])->name('menu');
-
-    // // Add item to cart
-    // Route::post('/add', [CartController::class, 'store'])->name('store');
-    
-    // // Update cart item quantity
-    // Route::put('/{product}', [CartController::class, 'update'])->name('update');
-
-    
-    // // Remove item from cart
-    // Route::delete('/{product}', [CartController::class, 'destroy'])->name('destroy');
-
-    
-    // // Clear entire cart
-    // Route::delete('/', [CartController::class, 'clear'])->name('clear');
-    
-    // // Get cart count (for AJAX updates)
-    // Route::get('/count', [CartController::class, 'count'])->name('count');
 });

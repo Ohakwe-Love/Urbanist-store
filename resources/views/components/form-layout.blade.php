@@ -9,7 +9,7 @@
     <title>{{ $title ?? "Urbanist | Improve your Livelihood" }}</title>
 
     <!-- custom css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/form.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/form.css') }}?v={{ time() }}">
 
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico')}}" type="image/x-icon">
 
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     {{-- iziToast --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/iziToast.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/iziToast.min.css') }}?v={{ time() }}">
 </head>
 <body>
 
@@ -33,10 +33,10 @@
 
 
     {{-- iziToast --}}
-    <script src="{{ asset('assets/js/iziToast.min.js') }}"></script>
+    <script src="{{ asset('assets/js/iziToast.min.js') }}?v={{ time() }}"></script>
 
     {{-- js --}}
-    <script src="{{ asset('assets/js/form.js') }}"></script>
+    <script src="{{ asset('assets/js/form.js') }}?v={{ time() }}"></script>
 
     @if (Session::has('success'))
         <script>
