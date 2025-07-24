@@ -187,7 +187,7 @@ form {
     color: var(--color-danger);
 }
 
-.input-row .input-group input{
+.input-row .input-group input, .input-group select{
     width: 100%;
     height: 50px;
     padding: 10px;
@@ -329,6 +329,110 @@ form {
 .editProfileFormContainer .input-row .input-group label::after {
     display: none !important;
 }
+
+.input-group select {
+    width: 100%;
+    height: 50px;
+    padding-left: 8px;
+    font-family: var(--font-family);
+    outline: none;
+    background-color: var(--input-bg);
+    border-radius: 5px;
+
+}
+
+.input-group select option:hover {
+    background-color: var(--color-hover);
+}
+
+.input-group select {
+    width: 100%;
+    height: 50px;
+    padding-left: 8px;
+    font-family: var(--font-family);
+    outline: none;
+    background-color: var(--input-bg);
+    border-radius: 5px;
+}
+.input-row .input-group input, .input-group select {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border: 1px solid var(--color-border-gray);
+    border-radius: 5px;
+    outline: none;
+    font-size: var(--text-mini-font-size);
+    background-color: var(--color-bg);
+}
+
+/* .dob-picker select {
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+} */
+
+/* .dob-picker select:focus {
+    border: 1px solid var(--secondary-color);
+    outline: none;
+} */
+
+.dob-picker {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.dob-dropdown {
+    position: relative;
+    min-width: 80px;
+    max-width: 120px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-gray);
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: var(--text-mini-font-size);
+    user-select: none;
+}
+
+.dob-dropdown:focus {
+    border: 1px solid var(--primary-color);
+    outline: none;
+}
+
+.dob-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border: 1.5px solid var(--color-border-gray);
+    border-radius: 0 0 8px 8px;
+    z-index: 10;
+    box-shadow: 0 2px 8px #0001;
+    max-height: 180px;
+    overflow-y: auto;
+    --webkit-scrollbar-width: 0px;
+    /* --webkit-scrollbar-color: var(--color-border-gray) transparent; */
+}
+
+.dob-options::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.dob-option {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dob-option:hover, .dob-option.selected {
+    background: var(--secondary-color, #f0f0f0);
+    color: var(--color-white);
+}
+
 .custom-file-input-wrapper {
     display: flex;
     flex-direction: column;
@@ -337,9 +441,9 @@ form {
 
 .custom-file-label {
     display: inline-block;
-    padding: 8px 16px;
-    background: #f5f5f5;
-    border: 1px solid #ccc;
+    padding: 14px 16px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-gray);
     border-radius: 6px;
     cursor: pointer;
     color: #333;
