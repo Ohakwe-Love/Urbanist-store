@@ -10,11 +10,13 @@
         </div>
 
         <div class="profile-content">
-            @if ($user->avatar)
-                <div class="profile-img">
+            <div class="profile-img">
+                @if ($user->avatar)
                     <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{$user->username}}">
-                </div>
-            @endif
+                @else 
+                    <img src="{{ asset('storage/avatars/default-avatar.png')}}" alt="{{$user->username}}">
+                @endif
+            </div>
 
             <div class="profile-name-bio profile-content-data">
                 <h2>{{$user->username}}</h2>
@@ -27,40 +29,80 @@
             <div class="profile-location profile-content-data">
                 <h3>Location</h3>
                 <p>
-                    Address: <span>{{ucwords($user->address)}}</span>
+                    Address: 
+                    @if ($user->address)
+                        <span>{{ucwords($user->address)}}</span>
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
 
                 <p>
-                    City: <span>{{ucwords($user->city)}}</span>
+                    City: 
+                    @if ($user->city)
+                        <span>{{ucwords($user->city)}}</span>
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
                 <p>
-                    State: <span>{{ucwords($user->state)}}</span>
+                    State: 
+                    @if($user->state)
+                        <span>{{ucwords($user->state)}}</span>
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
 
                 <p>
-                    Country: <span>{{ucwords($user->country)}}</span>
+                    Country:
+                    @if ($user->country)
+                        <span>{{ucwords($user->country)}}</span>                        
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
             </div>
 
             <div class="profile-contact profile-content-data">
                 <h3>contact</h3>
                 <p>
-                    Email: <span>{{$user->email}}</span>
+                    Email: 
+                    @if ($user->email)
+                        <span>{{$user->email}}</span>                        
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
 
                 <p>
-                    Phone: <span>{{$user->phone}}</span>
+                    Phone: 
+                    @if ($user->phone)
+                        <span>{{$user->phone}}</span>                        
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
             </div>
 
             <div class="profile-personal profile-content-data">
                 <h3>Personal</h3>
                 <p>
-                    DOB: <span>{{$user->date_of_birth}}</span>
+                    DOB: 
+                    @if ($user->date_of_birth)
+                        <span>{{$user->date_of_birth}}</span>                        
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
 
                 <p>
-                    Gender: <span>{{$user->gender}}</span>
+                    Gender: 
+                    @if ($user->gender)
+                        <span>{{$user->gender}}</span>                        
+                    @else
+                        <span>N/A</span>
+                    @endif
                 </p>
             </div>
 

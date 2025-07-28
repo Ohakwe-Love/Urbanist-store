@@ -27,7 +27,9 @@ class MergeGuestCart
      */
     public function handle(Login $event): void
     {
-        $this->cartService->mergeGuestCart();
+        $sessionId = session()->getId();
+        $this->cartService->mergeGuestCart($sessionId);
+        // $this->cartService->mergeGuestCart();
 
         //  try {
         //     $this->cartService->mergeGuestCart();

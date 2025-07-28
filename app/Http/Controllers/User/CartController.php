@@ -112,7 +112,6 @@ class CartController extends Controller
             'cart' => $this->cartService->getCartSummary()
         ]);
     }
-
     public function summary(): JsonResponse
     {
         return response()->json([

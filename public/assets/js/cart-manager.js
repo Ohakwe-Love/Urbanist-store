@@ -10,20 +10,6 @@ class CartManager {
     }
 
     bindEvents() {
-        // Add to cart buttons
-        // document.addEventListener('click', (e) => {
-        //     if (e.target.closest('.add-to-cart-btn')) {
-        //         this.handleAddToCart(e.target.closest('.add-to-cart-btn'));
-        //     }
-        // });
-
-        // // Keyboard shortcuts
-        // document.addEventListener('keydown', (e) => {
-        //     if (e.key === 'Escape') {
-        //         this.closeCartMenu();
-        //     }
-        // });
-
         document.addEventListener('click', (e) => {
             const button = e.target.closest('.add-to-cart-btn');
             if (!button) return;
@@ -32,7 +18,6 @@ class CartManager {
             const isInCart = button.dataset.inCart === 'true';
             
             if (isInCart) {
-                // this.removeFromCart(button.dataset.productId);
                 this.removeFromCart(button.dataset.cartItemId);
             } else {
                 this.handleAddToCart(button);
@@ -48,58 +33,43 @@ class CartManager {
 
         const productId = button.dataset.productId;
         const quantity = parseInt(button.dataset.quantity) || 1;
-        // const options = JSON.parse(button.dataset.options || '{}');
 
         try {
             const response = await this.apiCall('/cart/add', {
                 method: 'POST',
                 body: JSON.stringify({
-                    // product_id: productId,
-                    // quantity: quantity,
                     product_id: button.dataset.productId,
                     quantity: parseInt(button.dataset.quantity) || 1,
                 })
             });
 
-            // if (response.success) {
-            //     this.updateCartUI(response.cart);
-            //     this.showNotification(response.message, 'success');
-            // } else {
-            //     this.showNotification(response.message, 'error');
-            // }
-
             if (response.success) {
-                // this.updateCartUI({
-                //     count: response.cartCount,
-                //     total: response.cartTotal
-                //  });
-                // this.updateCartUI(response.cart);
-                
-                // // Update button state
-                // this.updateButtonState(button, true);
-                
-                // // Refresh cart menu if open
-                // if (this.isCartMenuOpen()) {
-                //     await this.refreshCartMenu();
-                // }
-                
-                // this.showNotification('Item added to cart successfully', 'success');
+                // Update cart icon and sidebar
+                this.updateCartUI(response.cart);
 
-                this.updateCartUI({
-                    count: response.cartCount,
-                    total: response.cartTotal
-                });
+                // If cart menu is open, refresh its HTML
+                if (this.isCartMenuOpen()) {
+                    await this.refreshCartMenu();
+                }
+
+                // Find the cart item for this product
+                const cartItem = response.cart.items.find(item => item.product_id == button.dataset.productId);
+                if (cartItem) {
+                    button.dataset.cartItemId = cartItem.id; // <-- Set the cart item ID here!
+                }
+
+                // Change button text to "Remove from Cart"
                 this.updateButtonState(button, true);
-                
+
                 this.showNotification('Item added to cart', 'success');
             } else {
                 this.showNotification(response.message || 'Failed to add item to cart', 'error');
             }
         } catch (error) {
-            // this.showNotification('Failed to add item to cart', 'error');
             console.error('Add to cart error:', error);
             this.showNotification('Failed to add item to cart', 'error');
         } finally {
+            this.setButtonLoading(button, false);
             this.isLoading = false;
         }
     }
@@ -132,53 +102,60 @@ class CartManager {
     }
 
     async removeFromCart(cartItemId) {
-        if (this.isLoading) return;
+        console.log('Trying to remove cart item:', cartItemId); // Debug
+        // if (this.isLoading) return;
 
-        this.isLoading = true;
+        // this.isLoading = true;
 
-        try {
-            const response = await this.apiCall('/cart/remove', {
-                method: 'DELETE',
-                body: JSON.stringify({
-                    cart_item_id: cartItemId
-                })
-            });
+        // try {
+        //     const response = await this.apiCall('/cart/remove', {
+        //         method: 'DELETE',
+        //         body: JSON.stringify({
+        //             cart_item_id: cartItemId
+        //         })
+        //     });
 
-            if (response.success) {
-                // this.updateCartUI(response.cart);
-                // this.showNotification(response.message, 'success');
-                if (response.cart) {
-                    this.updateCartUI(response.cart);
-                } else {
-                    this.updateCartUI({
-                        count: response.cartCount,
-                        total: response.cartTotal
-                    });
-                }
+        //     if (response.success) {
+        //         // if (response.cart) {
+        //         //     this.updateCartUI(response.cart);
+        //         // } else {
+        //         //     this.updateCartUI({
+        //         //         count: response.cartCount,
+        //         //         total: response.cartTotal
+        //         //     });
+        //         // }
                 
-                // Update all buttons for this product
+        //         // // Update all buttons for this product
+        //         // const productId = response.product_id;
+        //         // if (productId) {
+        //         //     const buttons = document.querySelectorAll(`.add-to-cart-btn[data-product-id="${productId}"]`);
+        //         //     buttons.forEach(button => {
+        //         //         this.updateButtonState(button, false);
+        //         //         button.dataset.inCart = "false";
+        //         //         button.dataset.cartItemId = "";
+        //         //     });
+        //         // }
 
-                // const productId = response.product_id;
-                // const buttons = document.querySelectorAll(`.add-to-cart-btn[data-product-id="${productId}"]`);
-                // buttons.forEach(button => this.updateButtonState(button, false));
-                
-                // this.showNotification('Item removed from cart', 'success');
+        //         this.updateCartUI(response.cart);
+        //         const productId = response.product_id;
+        //         if (productId) {
+        //             const buttons = document.querySelectorAll(`.add-to-cart-btn[data-product-id="${productId}"]`);
+        //             buttons.forEach(button => {
+        //                 this.updateButtonState(button, false);
+        //                 button.dataset.inCart = "false";
+        //                 button.dataset.cartItemId = "";
+        //             });
+        //         }
 
-                const productId = response.product_id;
-                if (productId) {
-                    const buttons = document.querySelectorAll(`.add-to-cart-btn[data-product-id="${productId}"]`);
-                    buttons.forEach(button => this.updateButtonState(button, false));
-                }
-
-                this.showNotification('Item removed from cart', 'success');
-            } else {
-                this.showNotification(response.message, 'error');
-            }
-        } catch (error) {
-            this.showNotification('Failed to remove item', 'error');
-        } finally {
-            this.isLoading = false;
-        }
+        //         this.showNotification('Item removed from cart', 'success');
+        //     } else {
+        //         this.showNotification(response.message, 'error');
+        //     }
+        // } catch (error) {
+        //     this.showNotification('Failed to remove item', 'error');
+        // } finally {
+        //     this.isLoading = false;
+        // }
     }
 
     async clearCart() {
@@ -209,22 +186,10 @@ class CartManager {
     }
 
     async loadCartData() {
-        // try {
-        //     const response = await this.apiCall('/cart/summary');
-        //     if (response.success) {
-        //         this.updateCartUI(response.cart);
-        //     }
-        // } catch (error) {
-        //     console.error('Failed to load cart data:', error);
-        // }
 
         try {
             const response = await this.apiCall('/cart/summary');
             if (response.success) {
-                // this.updateCartUI({
-                //     // count: response.cartCount,
-                //     // total: response.cartTotal
-                // });
                 this.updateCartUI(response.cart);
             }
         } catch (error) {
@@ -232,59 +197,7 @@ class CartManager {
         }
     }
 
-    // updateCartUI(cartData) {
-    //     // Update cart count
-    //     const cartCountElement = document.getElementById('cart-count');
-    //     const cartButton = document.querySelector('.cart-toggle-btn');
-        
-    //     if (cartData.count > 0) {
-    //         if (cartCountElement) {
-    //             cartCountElement.textContent = cartData.count;
-    //             cartCountElement.style.display = 'block';
-    //         } else {
-    //             // Create count element if it doesn't exist
-    //             const countDiv = document.createElement('div');
-    //             countDiv.className = 'cart-count';
-    //             countDiv.id = 'cart-count';
-    //             countDiv.textContent = cartData.count;
-    //             cartButton.appendChild(countDiv);
-    //         }
-    //     } else {
-    //         if (cartCountElement) {
-    //             cartCountElement.style.display = 'none';
-    //         }
-    //     }
-
-    //     // Update cart total
-    //     const cartTotalElement = document.getElementById('cart-total');
-    //     if (cartTotalElement) {
-    //         cartTotalElement.textContent = this.formatPrice(cartData.total);
-    //     }
-
-    //     // Update cart button data
-    //     if (cartButton) {
-    //         cartButton.dataset.cartCount = cartData.count;
-    //     }
-
-    //     // Refresh cart menu if open
-    //     if (this.isCartMenuOpen()) {
-    //         this.refreshCartMenu();
-    //     }
-    // }
-
     updateCartUI(cartData) {
-        // // Update cart count
-        // const cartCountElement = document.getElementById('cart-count');
-        // if (cartCountElement) {
-        //     cartCountElement.textContent = cartData.count || '0';
-        // }
-    
-        // // Update cart total
-        // const cartTotalElement = document.getElementById('cart-total');
-        // if (cartTotalElement) {
-        //     cartTotalElement.textContent = this.formatPrice(cartData.total || 0);
-        // }
-
         // Update cart count
         const cartCountElements = document.querySelectorAll('.cart-count');
         cartCountElements.forEach(element => {
@@ -454,25 +367,6 @@ class CartManager {
         }
         
         return data;
-        // return await response.json();
-
-        // try {
-        //     const response = await fetch(url, { 
-        //         ...defaultOptions, 
-        //         ...options 
-        //     });
-            
-        //     const data = await response.json();
-            
-        //     if (!response.ok) {
-        //         throw new Error(data.message || 'Request failed');
-        //     }
-            
-        //     return data;
-        // } catch (error) {
-        //     console.error('API call error:', error);
-        //     throw error;
-        // }
     }
 
     showNotification(message, type = 'info') {
