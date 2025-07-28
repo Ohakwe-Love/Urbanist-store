@@ -1,8 +1,4 @@
-{{-- @props([
-    
-]) --}}
-
-<x-dashboard-layout>
+<x-dashboard-layout :user=$user>
     <div class="profile-container">
         <div class="profile-header">
             <div>
@@ -14,59 +10,61 @@
         </div>
 
         <div class="profile-content">
-            <div class="profile-img">
-                <img src="{{asset('assets/images/avatar/testing.jpg')}}" alt="">
-            </div>
+            @if ($user->avatar)
+                <div class="profile-img">
+                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{$user->username}}">
+                </div>
+            @endif
 
             <div class="profile-name-bio profile-content-data">
-                <h2>Chidinma</h2>
+                <h2>{{$user->username}}</h2>
 
-                <div class="bio">
+                {{-- <div class="bio">
                     Bio: <span>let it prevail</span>
-                </div>
+                </div> --}}
             </div>
 
             <div class="profile-location profile-content-data">
                 <h3>Location</h3>
                 <p>
-                    Address: <span>chidi@gmail.com</span>
+                    Address: <span>{{ucwords($user->address)}}</span>
                 </p>
 
                 <p>
-                    City: <span>093898329</span>
+                    City: <span>{{ucwords($user->city)}}</span>
                 </p>
                 <p>
-                    State: <span>chidi@gmail.com</span>
+                    State: <span>{{ucwords($user->state)}}</span>
                 </p>
 
                 <p>
-                    Country: <span>093898329</span>
+                    Country: <span>{{ucwords($user->country)}}</span>
                 </p>
             </div>
 
             <div class="profile-contact profile-content-data">
                 <h3>contact</h3>
                 <p>
-                    Email: <span>chidi@gmail.com</span>
+                    Email: <span>{{$user->email}}</span>
                 </p>
 
                 <p>
-                    Phone: <span>093898329</span>
+                    Phone: <span>{{$user->phone}}</span>
                 </p>
             </div>
 
             <div class="profile-personal profile-content-data">
                 <h3>Personal</h3>
                 <p>
-                    DOB: <span>27/09/2006</span>
+                    DOB: <span>{{$user->date_of_birth}}</span>
                 </p>
 
                 <p>
-                    Gender: <span>Female</span>
+                    Gender: <span>{{$user->gender}}</span>
                 </p>
             </div>
 
-            <a href="{{route('profileEdit')}}" class="edit-profile-btn">Edit Profile</a>
+            <a href="{{route('profileEdit')}}" class="edit-profile-btn" target="_blank" rel="noopener noreferrer">Edit Profile</a>
         </div>
 
 

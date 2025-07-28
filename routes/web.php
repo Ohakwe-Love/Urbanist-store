@@ -96,6 +96,8 @@ Route::middleware('auth')->prefix('user')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     Route::get('/profile/edit', [ProfileController::class, 'showProfileEditForm'])->name('profileEdit');
+
+    Route::put('/profile/update', [ProfileController::class, 'updateProfile'])->name('updateProfile');
 });
 
 

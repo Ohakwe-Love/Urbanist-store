@@ -447,7 +447,7 @@ form {
     border-radius: 6px;
     cursor: pointer;
     color: #333;
-    transition: background 0.2s;
+    transition: 0.2s;
 }
 
 .custom-file-label:hover {
