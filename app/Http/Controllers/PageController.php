@@ -31,10 +31,10 @@ class PageController extends Controller
     }
 
     // News Page
-    public function news()
-    {
-        return view('pages.news');
-    }
+    // public function news()
+    // {
+    //     return view('pages.news');
+    // }
 
     // Policies Page
     public function policies()

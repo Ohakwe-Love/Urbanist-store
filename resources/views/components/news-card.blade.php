@@ -1,17 +1,19 @@
+@props (['news'])
+
 <div class="news-card">
     <a href="" class="news-card-img">
-        <img src="{{asset('assets/images/new-arrivals/new-1.webp')}}" alt="">
+        <img src="{{asset($news->news_image )}}" alt="">
     </a>
 
     <div class="news-card-details">
-        <a href="" class="news-card-title"><h2>Product title here</h2></a>
+        <a href="" class="news-card-title"><h2>{{$news->title}}</h2></a>
         <p class="news-card-desc">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac erat ut neque bibendum egestas sed quis justo. Integer non rhoncus diam. Nullam eget dapibus lectus, vitae condimentum sem
+           {{Str::limit($news->description, 80)}}
         </p>
 
         <div class="news-card-date-time-content">
-            <p>Date: <span>22 April 2023</span></p>
-            <p>Read time:<span>12min</span></p>
+            <p>Date: <span>{{$news->date}}</span></p>
+            <p>Read time:<span>{{$news->read_time}}</span><span>min</span></p>
         </div>
     </div>
 </div>

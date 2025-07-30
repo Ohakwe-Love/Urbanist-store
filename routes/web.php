@@ -10,6 +10,7 @@ use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\NewsController;
 
 // Public routes
 
@@ -29,7 +30,7 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/offer', [PageController::class, 'offer'])->name('offer');
 
 // news page route
-Route::get('/news', [PageController::class, 'news'])->name('news');
+Route::get('/news', [NewsController::class, 'index'])->name('news');
 
 // policies page route
 Route::get('/policies', [PageController::class, 'policies'])->name('policies');
