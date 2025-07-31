@@ -46,8 +46,8 @@
             </div>
         @endif
 
-        <div class="pagination-wrapper">
-            {{ $news->links() }}
+        <div class="blog-pagination-wrapper">
+            {{ $news->links("vendor.pagination.default") }}
         </div>
     </section>
 </x-layout>
