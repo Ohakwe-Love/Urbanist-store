@@ -1,12 +1,12 @@
 @props (['news'])
 
 <div class="news-card">
-    <a href="" class="news-card-img">
+    <a href="{{route('news.show', $news->slug)}}" class="news-card-img">
         <img src="{{asset($news->news_image )}}" alt="">
     </a>
 
     <div class="news-card-details">
-        <a href="" class="news-card-title"><h2>{{$news->title}}</h2></a>
+        <a href="{{route('news.show', $news->slug)}}" class="news-card-title"><h2>{{$news->title}}</h2></a>
         <p class="news-card-desc">
            {{Str::limit($news->description, 80)}}
         </p>

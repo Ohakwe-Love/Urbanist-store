@@ -17,8 +17,8 @@
             @endif 
         </div>
 
+        {{-- Pagination Elements --}}
         <div class="currentPage-container">
-            {{-- Pagination Elements --}}
             @foreach ($elements as $element)
                 @if (is_string($element))
                     <span class="page">{{ $element }}</span>

@@ -32,6 +32,9 @@ Route::get('/offer', [PageController::class, 'offer'])->name('offer');
 // news page route
 Route::get('/news', [NewsController::class, 'index'])->name('news');
 
+// news detail page route
+Route::get('/news/{news:slug}', [NewsController::class, 'show'])->name('news.show');
+
 // policies page route
 Route::get('/policies', [PageController::class, 'policies'])->name('policies');
 

@@ -9,7 +9,7 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $news = News::latest()->paginate(6);
+        $news = News::latest()->paginate(9);
 
         $trendingNews = News::latest()->first();
 
@@ -19,9 +19,20 @@ class NewsController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        // Logic to retrieve and display a single news article by ID
+        $news = News::where('slug', $slug)->firstOrFail();
+
+        $relatedNews = News::where('id', '!=', $news->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
+
+        return view('news.show', [
+            'news' => $news,
+            'relatedNews' => $relatedNews
+        ]); 
     }
 
     public function create()

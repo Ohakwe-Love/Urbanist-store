@@ -7,17 +7,16 @@
 
     <section class="news-wrapper">
         <div class="news-route"><a href="{{route('home')}}">Home</a>&ensp;/&ensp; News</div>
-
         
         @if ($trendingNews)
-        <h1 class="updates-heading">Updates from Urbanist</h1>
+            <h1 class="updates-heading">Updates from Urbanist</h1>
             <div class="trending-news-card">
-                <a href="" class="trending-news-card-img">
+                <a href="{{route('news.show', $trendingNews->slug)}}" class="trending-news-card-img">
                     <img src="{{asset($trendingNews->news_image)}}" alt="">
                 </a>
 
                 <div class="trending-news-card-details">
-                    <a href="" class="trending-news-card-title"><h2>Product title here</h2></a>
+                    <a href="{{route('news.show', $trendingNews->slug)}}" class="trending-news-card-title"><h2>Product title here</h2></a>
                     <p class="trending-news-card-desc">
                         {{Str::limit($trendingNews->description, 100, "...")}}
                     </p>
