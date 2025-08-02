@@ -2,7 +2,7 @@
 
 <div class="news-card">
     <a href="{{route('news.show', $news->slug)}}" class="news-card-img">
-        <img src="{{asset($news->news_image )}}" alt="">
+        <img src="{{ asset($news->news_image) }}" alt="{{ $news->slug }}">
     </a>
 
     <div class="news-card-details">

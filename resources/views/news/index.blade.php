@@ -12,7 +12,7 @@
             <h1 class="updates-heading">Updates from Urbanist</h1>
             <div class="trending-news-card">
                 <a href="{{route('news.show', $trendingNews->slug)}}" class="trending-news-card-img">
-                    <img src="{{asset($trendingNews->news_image)}}" alt="">
+                    <img src="{{ asset( $trendingNews->news_image)}}" alt="{{$trendingNews->slug}}">
                 </a>
 
                 <div class="trending-news-card-details">

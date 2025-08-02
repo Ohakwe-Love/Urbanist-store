@@ -13,7 +13,6 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\NewsController;
 
 // Public routes
-
 // Home page route
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

@@ -27,11 +27,14 @@ class NewsController extends Controller
             ->latest()
             ->take(3)
             ->get();
+        
+        $recentPosts = News::where('id', '!=', $news->id)->latest()->take(7)->get();
 
 
         return view('news.show', [
             'news' => $news,
-            'relatedNews' => $relatedNews
+            'relatedNews' => $relatedNews,
+            'recentPosts' => $recentPosts
         ]); 
     }
 
