@@ -8,7 +8,9 @@
 
     <!-- About Company Section -->
     <section class="section about-company" id="about">
+
         <div class="container">
+            <div class="page-route"><a href="{{route('home')}}">Home</a>&ensp;/&ensp; About</div>
             <div class="about-company-content">
                 <div class="about-company-text">
                 <h2>Transforming Spaces Into Experiences</h2>

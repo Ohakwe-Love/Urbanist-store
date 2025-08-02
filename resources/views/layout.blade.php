@@ -124,6 +124,9 @@
         </div>
         <!-- back to top end -->
 
+        {{-- preloader --}}
+        <x-preloader />
+
         <!-- footer -->
         <x-footer />
         {{-- footer end --}}

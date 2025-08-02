@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// preloader
+window.addEventListener('load', () => {
+    const loader = document.querySelector('.pre-loader-container');
+    loader.style.opacity = '0';
+    loader.style.pointerEvents = 'none';
+    setTimeout(() => loader.remove(), 1000);
+});
+
 // Unhiding the dropdown with single open logic
 
 let currentlyOpenDropdown = null;

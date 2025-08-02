@@ -6,7 +6,7 @@
     @endpush
 
     <section class="news-wrapper">
-        <div class="news-route"><a href="{{route('home')}}">Home</a>&ensp;/&ensp; News</div>
+        <div class="page-route"><a href="{{route('home')}}">Home</a>&ensp;/&ensp; News</div>
         
         @if ($trendingNews)
             <h1 class="updates-heading">Updates from Urbanist</h1>

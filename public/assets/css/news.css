@@ -2,14 +2,6 @@
     padding: 50px 70px;
 }
 
-.news-route {
-    margin-bottom: 30px;
-}
-
-.news-route a {
-    color: var(--primary-color); 
-}
-
 .updates-heading {
     font-size: 45px;
 }
@@ -329,7 +321,7 @@
     .singleNewsArticle article {
         width: 60%;
     }
-    
+
     .recentPosts {
         padding: 15px;
     }

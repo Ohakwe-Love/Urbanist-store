@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/contact.css') }}">
     @endpush
 
+    {{-- <div class="page-route"><a href="{{route('home')}}">Home</a>&ensp;/&ensp; Contact</div> --}}
     <section class="contactWrapper">
         <form action="" class="contactForm">
             <h2>Get in Touch</h2>
