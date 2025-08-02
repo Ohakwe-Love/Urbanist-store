@@ -42,7 +42,7 @@ body {
 p {
     font-size: var(--text-small-font-size);
     line-height: 1.5;
-    color: var(--text-primary-small-font-size);
+    color: var(--secondary-color);
 }
 
 h3 {

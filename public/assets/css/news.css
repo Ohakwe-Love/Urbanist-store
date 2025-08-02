@@ -201,16 +201,15 @@
     align-items: center;
 }
 
-.newsAuthor {
+.newsAuthor, .singleNewsDateContainer {
     display: flex;
     gap: 10px;
     align-items: center;
-    width: 20%;
 }
 
 .newsAuthorImg {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     background-color: var(--secondary-color);
     border-radius: 50%;
     display: flex;
@@ -223,15 +222,13 @@
 }
 
 .singleNewsDateContainer {
-    width: 100%;
-    display: flex;
-    gap: 10px;
-    align-items: center;
+    color: var(--color-dark-gray);
 }
 
 .singleNewsDateContainer svg {
     width: 20px;
     height: 20px;
+    fill: var(--color-dark-gray);
 }
 
 .singleNewsArticle{
@@ -247,7 +244,6 @@
 
 .singleNewsImage {
     width: 100%;
-    margin: 0 auto;
     overflow: hidden;
     border-radius: 12px;
     height: 350px;
@@ -256,11 +252,6 @@
 .singleNewsImage img {
     width: 100%;
     height: 100%;
-}
-
-.singleNewsDetails {
-    width: 100%;
-    margin-top: 50px;
 }
 
 .recentPosts {
@@ -299,4 +290,70 @@
 
 .recentPosts ul li:hover a {
     color: var(--color-hover);
+}
+
+@media (max-width: 900px) {
+    .singleNewsWrapper {
+        padding: 20px;
+    }
+
+    .singleNewsWrapper .updates-heading {
+        font-size: 25px;
+        margin: 0 !important;
+    }
+
+    .singleNewsContainer {
+        width: 100%;
+        margin: auto;
+    }
+
+    .singleNewsDetails {
+        margin-top: 20px;
+        gap: 5px;
+    }
+
+    .newsAuthorImg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .singleNewsDateContainer svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .singleNewsArticle{
+        margin: 50px 0;
+    }
+
+    .singleNewsArticle article {
+        width: 60%;
+    }
+    
+    .recentPosts {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    .singleNewsArticle{
+        flex-wrap: wrap;
+    }
+
+    .singleNewsArticle article {
+        width: 100%;
+    }
+
+    .recentPosts {
+        width: 100%;
+        margin-top: 40px;
+    }
+
+    .singleNewsDetails {
+        flex-wrap: wrap;
+    } 
+
+    .newsAuthor, .singleNewsDateContainer {
+        gap: 7px;
+    }
 }
