@@ -34,6 +34,7 @@
 
     <main>
         <!-- top-bar -->
+        
         <div class="top-bar">
             <div class="container">
                 <div class="contact-info">

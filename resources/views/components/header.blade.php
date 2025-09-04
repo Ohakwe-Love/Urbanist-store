@@ -9,7 +9,7 @@
             <ul>
                 <li><a href="{{ route('home') }}">home</a></li>
                 <li><a href="{{ route('about') }}">about</a></li>
-                <li><a href="{{ route('offer') }}">offer</a></li>
+                {{-- <li><a href="{{ route('offer') }}">offer</a></li> --}}
                 <li><a href="{{ route('shop') }}">shop</a></li>
                 <li><a href="{{ route('contact') }}">contact</a></li>
                 <li><a href="{{ route('news') }}">news</a></li>
