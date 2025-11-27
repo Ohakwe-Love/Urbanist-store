@@ -49,7 +49,7 @@
                 <div class="input-group">
                     <label for="password_confirmation">confirm password</label>
                     <div class="password">
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="password-input" placeholder="********">
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="password-input" placeholder="********">   
                         <span class="passwordToggle"><i class="fa-regular fa-eye-slash"></i></span>
                     </div>
                 </div>

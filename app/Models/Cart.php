@@ -98,3 +98,70 @@
 //         }
 //     }
 // } 
+
+
+// namespace App\Models;
+
+// use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// use Illuminate\Database\Eloquent\Relations\HasMany;
+
+// class Cart extends Model
+// {
+//     protected $fillable = ['user_id', 'session_id'];
+
+//     public function user(): BelongsTo
+//     {
+//         return $this->belongsTo(User::class);
+//     }
+
+//     public function items(): HasMany
+//     {
+//         return $this->hasMany(CartItem::class);
+//     }
+
+//     public function getTotalAttribute(): float
+//     {
+//         return $this->items->sum(function ($item) {
+//             return $item->price * $item->quantity;
+//         });
+//     }
+
+//     public function getItemCountAttribute(): int
+//     {
+//         return $this->items->sum('quantity');
+//     }
+// }
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Cart extends Model
+{
+    protected $fillable = ['user_id', 'session_id'];
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Calculate total from items
+    public function getTotalAttribute(): float
+    {
+        return $this->items->sum('subtotal');
+    }
+
+    // Get item count
+    public function getItemCountAttribute(): int
+    {
+        return $this->items->sum('quantity');
+    }
+}

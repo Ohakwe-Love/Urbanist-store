@@ -78,12 +78,6 @@ class Product extends Model
         return $query->whereBetween('price', [$min, $max]);
     }
 
-    // Accessors
-    // public function getIsInStockAttribute()
-    // {
-    //     return $this->stock_quantity > 0;
-    // }
-
     public function getDiscountPercentageAttribute()
     {
         if ($this->sale_price && $this->sale_price < $this->price) {
@@ -123,7 +117,7 @@ class Product extends Model
         return $this->stock_quantity >= $quantity;
     }
 
-    public function isInCart()
+    public function inCart()
     {
         if (!auth()->check()) {
             return false;

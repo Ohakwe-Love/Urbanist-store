@@ -1,102 +1,37 @@
-{{-- @props(['product']);
 @props([
     'product',
-    'quantity' => 1,
-    'options' => [],
-    'class' => '',
-    'text' => 'Add to Cart'
-])
-
-<div class="product-bottom-overlay add-to-cart-container" data-product-id="{{ $product->id }}">
-    <button 
-        type="button"
-        class="add-to-cart-btn {{ $class }}"
-        data-product-id="{{ $product->id }}"
-        data-quantity="{{ $quantity }}"
-        data-options="{{ json_encode($options) }}"
-        {{ $attributes }}
-    >
-        <span class="btn-text">{{ $text }}</span>
-        <span class="btn-loading" style="display: none;">
-            <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2a10 10 0 0 1 10 10"></path>
-            </svg>
-        </span>
-    </button>
-</div> --}}
-
-{{-- @props([
-    'product',
+    'stockQuantity' => null,
     'quantity' => 1,
     'options' => [],
     'class' => '',
     'inCart' => false,
-    'text' => null
+    'cartItemId' => null,
 ])
 
 @php
-    $buttonText = $text ?? ($inCart ? 'Remove from Cart' : 'Add to Cart');
-@endphp
-
-<div class="product-bottom-overlay add-to-cart-container" data-product-id="{{ $product->id }}">
-    <button 
-        type="button"
-        class="add-to-cart-btn {{ $class }} {{ $inCart ? 'in-cart' : '' }}"
-        data-product-id="{{ $product->id }}"
-        data-quantity="{{ $quantity }}"
-        data-options="{{ json_encode($options) }}"
-        onclick="window.CartManager.{{ $inCart ? 'removeFromCart' : 'handleAddToCart' }}(this)"
-        {{ $attributes }}
-    >
-        <span class="btn-text">{{ $buttonText }}</span>
-        <span class="btn-loading" style="display: none;">
-            <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2a10 10 0 0 1 10 10"></path>
-            </svg>
-        </span>
-    </button>
-</div> --}}
-
-@props([
-    'product',
-    'quantity' => 1,
-    'options' => [],
-    'class' => '',
-    'inCart' => false
-])
-
-@php
-    // Check if product is in cart
-    $isInCart = $inCart || (function() use ($product) {
-        return \App\Models\CartItem::where('product_id', $product->id)
-            ->where(function($query) {
-                return $query->where('session_id', session()->getId())
-                    ->orWhere('user_id', auth()->id());
-            })->exists();
-    })();
-
-    $buttonText = $isInCart ? 'Remove from Cart' : 'Add to Cart';
-    $buttonClass = 'add-to-cart-btn ' . $class . ($isInCart ? ' in-cart' : '');
+    $buttonText = $inCart ? 'Remove from Cart' : 'Add to Cart';
+    $buttonClass = 'add-to-cart-btn ' . $class . ($inCart ? ' in-cart' : '');
 @endphp
 
 <div class="product-bottom-overlay add-to-cart-container">
     <button 
         type="button"
         class="{{ $buttonClass }}"
+        data-stock="{{ $stockQuantity }}"
         data-product-id="{{ $product->id }}"
-        data-cart-item-id="{{ $cartItem->id ?? '' }}"
+        data-cart-item-id="{{ $cartItemId ?? '' }}"
         data-quantity="{{ $quantity }}"
         data-options="{{ json_encode($options) }}"
-        data-in-cart="{{ $isInCart ? 'true' : 'false' }}"
+        data-in-cart="{{ $inCart ? 'true' : 'false' }}"
+        data-add-text="Add to Cart"
+        data-remove-text="Remove from Cart"
         {{ $attributes }}
     >
         <span class="btn-text">{{ $buttonText }}</span>
         <span class="btn-loading" style="display: none;">
             <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2a10 10 0 0 1 10 10"></path>
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.25" stroke-width="2"></circle>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke-width="2" stroke-linecap="round"></path>
             </svg>
         </span>
     </button>

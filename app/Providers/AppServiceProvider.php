@@ -22,15 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // View::composer('*', CartComposer::class);
-        // View::composer(['components.cart-menu', 'components.cart-icon'], CartComposer::class);
-
-        View::composer([
-            'components.cart-icon',
-            'components.cart-menu',
-            'layout'
-        ], CartComposer::class);
-
-        // View::composer('components.cart-menu', CartComposer::class);
+        // Share cart data with all views
+        View::composer('*', CartComposer::class);
     }
 }

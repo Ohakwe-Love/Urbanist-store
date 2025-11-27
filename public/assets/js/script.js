@@ -12,14 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// preloader
-window.addEventListener('load', () => {
-    const loader = document.querySelector('.pre-loader-container');
-    loader.style.opacity = '0';
-    loader.style.pointerEvents = 'none';
-    setTimeout(() => loader.remove(), 1000);
-});
-
 // Unhiding the dropdown with single open logic
 
 let currentlyOpenDropdown = null;
@@ -73,8 +65,6 @@ mobileMenuTrigger.addEventListener('click', () => {
     mobileMenu.classList.add('active');
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-    console.log('clicked');
-    
 });
 
 mobileMenuClose.addEventListener('click', () => {
@@ -82,33 +72,6 @@ mobileMenuClose.addEventListener('click', () => {
     overlay.classList.remove('active');
     document.body.style.overflow = 'auto';
 });
-
-
-// Quantity buttons
-// const minusBtns = document.querySelectorAll('.quantity-btn.minus');
-// const plusBtns = document.querySelectorAll('.quantity-btn.plus');
-
-// // Decrease quantity
-// minusBtns.forEach(btn => {
-//     btn.addEventListener('click', function() {
-//         const input = this.nextElementSibling;
-//         const value = parseInt(input.value);
-//         if (value > 1) {
-//             input.value = value - 1;
-//         }
-//     });
-// });
-
-// // Increase quantity
-// plusBtns.forEach(btn => {
-//     btn.addEventListener('click', function() {
-//         const input = this.previousElementSibling;
-//         const value = parseInt(input.value);
-//         if (value < 99) {
-//             input.value = value + 1;
-//         }
-//     });
-// });
 
 
 // overlay click event

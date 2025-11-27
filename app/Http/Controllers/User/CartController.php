@@ -4,13 +4,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\CartItem;
 use App\Models\Product;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use App\Services\CartService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
@@ -18,105 +15,123 @@ class CartController extends Controller
         private CartService $cartService
     ) {}
 
-    public function add(Request $request): JsonResponse
+    public function summary(): JsonResponse
     {
-        $cartItem = CartItem::find($request->cart_item_id);
-        $productId = $cartItem ? $cartItem->product_id : null;
-        $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-            'quantity' => 'integer|min:1|max:99',
-            'options' => 'array'
-        ]);
+        try {
+            $data = $this->cartService->getCartData();
+            $cart = $this->cartService->getCart();
 
-        $success = $this->cartService->addToCart(
-            $request->product_id,
-            $request->quantity ?? 1,
-            $request->options ?? []
-        );
+            // Generate HTML for cart menu CONTENT only (not the wrapper)
+            $html = view('components.cart-menu-items', [
+                'cartItems' => $cart->items,
+                'cartTotal' => $data['total'],
+                'cartCount' => $data['count']
+            ])->render();
 
-        if ($success) {
             return response()->json([
                 'success' => true,
-                'message' => 'Product added to cart',
-                'cart' => $this->cartService->getCartSummary(),
-                'inCart' => true,
-                'product_id' => $productId
+                'cart' => $data,
+                'html' => $html
             ]);
-        }
+        } catch (\Exception $e) {
+            \Log::error('Cart summary error: ' . $e->getMessage());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to add product to cart'
-        ], 400);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function add(Request $request): JsonResponse
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'nullable|integer|min:1'
+        ]);
+
+        try {
+            $product = Product::findOrFail($request->product_id);
+            $quantity = $request->input('quantity', 1);
+
+            $data = $this->cartService->addItem($product, $quantity);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product added to cart successfully',
+                'cart' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function update(Request $request): JsonResponse
     {
         $request->validate([
             'cart_item_id' => 'required|integer',
-            'quantity' => 'required|integer|min:0|max:99'
+            'quantity' => 'required|integer|min:0'
         ]);
 
-        $success = $this->cartService->updateQuantity(
-            $request->cart_item_id,
-            $request->quantity
-        );
+        try {
+            $data = $this->cartService->updateQuantity(
+                $request->cart_item_id,
+                $request->quantity
+            );
 
-        if ($success) {
             return response()->json([
                 'success' => true,
-                'message' => 'Cart updated',
-                'cartItem' => $this->cartService->getCartSummary()
+                'message' => $request->quantity > 0 ? 'Cart updated successfully' : 'Item removed from cart',
+                'cart' => $data
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to update cart'
-        ], 400);
     }
 
     public function remove(Request $request): JsonResponse
     {
-        $cartItem = CartItem::find($request->cart_item_id);
-        $productId = $cartItem ? $cartItem->product_id : null;
-
         $request->validate([
             'cart_item_id' => 'required|integer'
         ]);
 
-        $success = $this->cartService->removeFromCart($request->cart_item_id);
+        try {
+            $data = $this->cartService->removeItem($request->cart_item_id);
 
-        if ($success) {
             return response()->json([
                 'success' => true,
-                'message' => 'Item removed from cart',
-                'cart' => $this->cartService->getCartSummary(),
-                'product_id' => $productId
+                'message' => 'Item removed from cart successfully',
+                'cart' => $data
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to remove item'
-        ], 400);
     }
 
     public function clear(): JsonResponse
     {
-        $success = $this->cartService->clearCart();
+        try {
+            $data = $this->cartService->clearCart();
 
-        return response()->json([
-            'success' => $success,
-            'message' => $success ? 'Cart cleared' : 'Failed to clear cart',
-            'cart' => $this->cartService->getCartSummary()
-        ]);
-    }
-    public function summary(): JsonResponse
-    {
-        return response()->json([
-            'success' => true,
-            'cart' => $this->cartService->getCartSummary()
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart cleared successfully',
+                'cart' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
