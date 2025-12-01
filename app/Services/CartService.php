@@ -125,56 +125,6 @@ class CartService
      * Merge session cart into user cart after login
      */
 
-    // public function mergeSessionCartIntoUserCart(): void
-    // {
-    //     if (!Auth::check()) {
-    //         return;
-    //     }
-
-    //     $sessionId = Session::getId();
-    //     $sessionCart = Cart::where('session_id', $sessionId)
-    //         ->whereNull('user_id')
-    //         ->first();
-
-    //     if (!$sessionCart || $sessionCart->items->isEmpty()) {
-    //         return;
-    //     }
-
-    //     $userCart = Cart::firstOrCreate([
-    //         'user_id' => Auth::id()
-    //     ]);
-
-    //     // Don't merge if it's the same cart
-    //     if ($sessionCart->id === $userCart->id) {
-    //         return;
-    //     }
-
-    //     foreach ($sessionCart->items as $sessionItem) {
-    //         $existingItem = $userCart->items()
-    //             ->where('product_id', $sessionItem->product_id)
-    //             ->first();
-
-    //         if ($existingItem) {
-    //             // Add quantities together
-    //             $existingItem->update([
-    //                 'quantity' => $existingItem->quantity + $sessionItem->quantity
-    //             ]);
-    //         } else {
-    //             // Move item to user cart
-    //             CartItem::create([
-    //                 'cart_id' => $userCart->id,
-    //                 'product_id' => $sessionItem->product_id,
-    //                 'quantity' => $sessionItem->quantity,
-    //                 'price' => $sessionItem->price
-    //             ]);
-    //         }
-    //     }
-
-    //     // Delete the session cart after merging
-    //     $sessionCart->items()->delete();
-    //     $sessionCart->delete();
-    // }
-
     public function mergeSessionCartIntoUserCart(): void
     {
         if (!Auth::check()) {
