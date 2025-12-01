@@ -18,6 +18,7 @@ class EventServiceProvider extends ServiceProvider
             MergeGuestCart::class,
         ],
     ];
+
     /**
      * Register services.
      */

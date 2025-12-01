@@ -12,26 +12,28 @@ use App\Http\Requests\AuthUserRequest;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use App\Services\CartService;
-
-
-
 
 class AuthController extends Controller
 {
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     public function register()
     {
         return view('user.register');
     }
 
-    public function store(RegisterUserRequest $request) 
+    public function store(RegisterUserRequest $request): RedirectResponse
     {
         $validatedData = $request->validated();
-
         $validatedData['password'] = Hash::make($validatedData['password']);
-
         $user = User::create($validatedData);
-
         Auth::login($user);
 
         return redirect()->route('login')->with("success", "You've been registered successfully, you can now log in");
@@ -44,22 +46,24 @@ class AuthController extends Controller
 
     public function authenticate(AuthUserRequest $request)
     {
-        // Validate the request data
         $login = $request->input('login');
         $password = $request->input('password');
         $remember = $request->filled('remember');
 
-        // Determine if the login field is an email or username
-
         $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (Auth::attempt([$fieldType => $login, 'password' => $password], $remember)) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('home'))->with('success', 'You are logged in!');
-        }
+        // Capturing the OLD session ID BEFORE login
+        $oldSessionId = Session::getId();
 
-        if (Auth::check()) {
-            CartItem::mergeCarts(session()->getId(), Auth::id());
+        if (Auth::attempt([$fieldType => $login, 'password' => $password], $remember)) {
+            
+            // Merge the cart using the OLD session ID
+            $this->mergeCartWithOldSession($oldSessionId);
+            
+            // THEN regenerate session
+            $request->session()->regenerate();
+            
+            return redirect()->intended(route('home'))->with('success', 'You are logged in!');
         }
 
         return back()->withErrors([
@@ -67,24 +71,70 @@ class AuthController extends Controller
         ])->onlyInput('login');
     }
 
-    public function authenticated(Request $request, $user)
+    /**
+     * Merge guest cart using the old session ID
+     */
+    protected function mergeCartWithOldSession(string $oldSessionId): void
     {
-        $cartService = app(CartService::class);
-        $cartService->mergeGuestCart(Session::getId());
+        if (!Auth::check()) {
+            return;
+        }
+
+        // Find the guest cart using the OLD session ID
+        $sessionCart = Cart::where('session_id', $oldSessionId)
+            ->whereNull('user_id')
+            ->first();
+
+        if (!$sessionCart || $sessionCart->items->isEmpty()) {
+            return;
+        }
+
+        // Get or create the user's cart
+        $userCart = Cart::firstOrCreate([
+            'user_id' => Auth::id()
+        ]);
+
+        // Don't merge if it's somehow the same cart
+        if ($sessionCart->id === $userCart->id) {
+            return;
+        }
+
+        // Merge each item
+        foreach ($sessionCart->items as $sessionItem) {
+            $existingItem = $userCart->items()
+                ->where('product_id', $sessionItem->product_id)
+                ->first();
+
+            if ($existingItem) {
+                // Combine quantities
+                $existingItem->update([
+                    'quantity' => $existingItem->quantity + $sessionItem->quantity
+                ]);
+            } else {
+                // Create new item in user cart
+                CartItem::create([
+                    'cart_id' => $userCart->id,
+                    'product_id' => $sessionItem->product_id,
+                    'quantity' => $sessionItem->quantity,
+                    'price' => $sessionItem->price
+                ]);
+            }
+        }
+
+        // Clean up the old session cart
+        $sessionCart->items()->delete();
+        $sessionCart->delete();
     }
+
+    // Remove this method - it's not being used
+    // public function authenticated(Request $request, $user) { ... }
 
     public function logout(Request $request): RedirectResponse
     {
-        // Log out the user
-        Auth::logout(); 
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        // Invalidate the session
-        $request->session()->invalidate(); 
-
-        // Regenerate the CSRF token
-        $request->session()->regenerateToken(); 
-
-        return redirect('/')->with('success', 'You
-        re successfully logged out!');
+        return redirect('/')->with('success', 'You are successfully logged out!');
     }
 }

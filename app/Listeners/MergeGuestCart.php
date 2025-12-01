@@ -2,56 +2,38 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Services\CartService;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 
-
-
 class MergeGuestCart
 {
-    use InteractsWithQueue;
     protected $cartService;
-    /**
-     * Create the event listener.
-     */
+
     public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
     }
 
-    /**
-     * Handle the event.
-     */
     public function handle(Login $event): void
     {
-        $sessionId = session()->getId();
-        $this->cartService->mergeGuestCart($sessionId);
-        // $this->cartService->mergeGuestCart();
+        Log::info('=== MergeGuestCart Listener Triggered ===', [
+            'user_id' => $event->user->id,
+            'session_id' => session()->getId()
+        ]);
 
-        //  try {
-        //     $this->cartService->mergeGuestCart();
-        //     Log::info('Guest cart merged successfully for user: ' . $event->user->id);
-        // } catch (\Exception $e) {
-        //     Log::error('Failed to merge guest cart: ' . $e->getMessage(), [
-        //         'user_id' => $event->user->id
-        //     ]);
+        try {
+            $this->cartService->mergeSessionCartIntoUserCart();
             
-        //     // Optionally retry the job
-        //     $this->release(30); // Releases the job back to queue after 30 seconds
-        // }
+            Log::info('Guest cart merged successfully', [
+                'user_id' => $event->user->id
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to merge guest cart', [
+                'user_id' => $event->user->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
-
-    /**
-     * Handle a job failure.
-     */
-    // public function failed(\Throwable $exception): void
-    // {
-    //     Log::error('Cart merge job failed', [
-    //         'exception' => $exception->getMessage()
-    //     ]);
-    // }
-
 }

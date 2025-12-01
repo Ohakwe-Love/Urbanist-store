@@ -10,6 +10,7 @@ use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\NewsController;
 
 // Public routes
@@ -99,28 +100,17 @@ Route::middleware('auth')->prefix('user')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     Route::get('/profile/edit', [ProfileController::class, 'showProfileEditForm'])->name('profileEdit');
-
+    
     Route::put('/profile/update', [ProfileController::class, 'updateProfile'])->name('updateProfile');
+    
+    // Checkout routes would go here
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    
+    // Route::prefix('checkout')->name('checkout.')->group(function () {
+
+        // Route::post('/method', [CheckoutController::class, 'checkoutMethod'])->name('method');
+    // });
 });
-
-
-// Cart routes
-// Route::prefix('cart')->name('cart.')->group(function () {
-//     // add to cart 
-//     Route::post('/add', [CartController::class, 'add'])->name('add');
-
-//     // update cart
-//     Route::patch('/update', [CartController::class, 'update'])->name('update');
-
-//     // remove from cart
-//     Route::delete('/remove', [CartController::class, 'remove'])->name('remove');
-
-//     // clear cart 
-//     Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
-
-//     // summary
-//     Route::get('/summary', [CartController::class, 'summary'])->name('summary');
-// });
 
 // Cart API routes
 Route::prefix('cart')->name('cart.')->group(function () {
