@@ -157,18 +157,3 @@ if (applyPriceBtn) {
         window.location.href = url.toString();
     });
 }
-
-// Handle filter clicks to ensure only one filter at a time
-// document.querySelectorAll('[data-filter]').forEach(link => {
-//     link.addEventListener('click', function(e) {
-//         e.preventDefault();
-        
-//         const filterType = this.dataset.filter;
-//         const filterValue = this.dataset.value;
-        
-//         const url = new URL('{{ route("shop") }}', window.location.origin);
-//         url.searchParams.set(filterType, filterValue);
-        
-//         window.location.href = url.toString();
-//     });
-// });

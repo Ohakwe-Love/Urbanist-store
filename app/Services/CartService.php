@@ -147,6 +147,7 @@ class CartService
         $userCart = Cart::firstOrCreate([
             'user_id' => Auth::id()
         ]);
+        
 
         if ($sessionCart->id === $userCart->id) {
             return;
