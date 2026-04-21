@@ -1,6 +1,5 @@
 @php
     $user = auth()->user();
-    $wishlists = $user->wishlistProducts()->get();
 @endphp
 
 <x-dashboard-layout :user="$user">

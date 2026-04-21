@@ -2,6 +2,7 @@
 namespace App\View\Composers;
 
 use App\Services\CartService;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CartComposer
@@ -12,6 +13,16 @@ class CartComposer
 
     public function compose(View $view): void
     {
+        if (Str::startsWith($view->name(), 'admin.')) {
+            $view->with([
+                'cartData' => ['items' => collect(), 'total' => 0, 'count' => 0, 'product_ids' => []],
+                'cartItemsLookup' => [],
+                'cartProductIds' => [],
+            ]);
+
+            return;
+        }
+
         // Get full cart data
         $cartData = $this->cartService->getCartData();
         

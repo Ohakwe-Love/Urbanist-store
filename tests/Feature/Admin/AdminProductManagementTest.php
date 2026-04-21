@@ -1,12 +1,12 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Admin;
 use App\Models\Product;
 use App\Models\Tag;
-use App\Models\User;
 
 it('allows admins to create a product with category and tags', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = Admin::factory()->create();
     $category = Category::create([
         'name' => 'Living Room',
         'slug' => 'living-room',
@@ -17,7 +17,7 @@ it('allows admins to create a product with category and tags', function () {
         'slug' => 'featured-drop',
     ]);
 
-    $response = $this->actingAs($admin)->post(route('admin.products.store'), [
+    $response = $this->actingAs($admin, 'admin')->post(route('admin.products.store'), [
         'title' => 'Cloud Sofa',
         'slug' => 'cloud-sofa',
         'description' => 'Deep-seat sofa for modern living rooms.',

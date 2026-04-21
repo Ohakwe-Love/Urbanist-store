@@ -65,6 +65,7 @@
             <button class="submit-btn">Register</button>
 
             <p class="login-link">Already have an account? <a href="{{route('login')}}">Login</a></p>
+            <p class="login-link">Need the back office? <a href="{{ route('admin.login') }}">Admin login</a></p>
         </form>
     </div> 
 </x-form-layout>

@@ -73,7 +73,7 @@
                     <span class="admin-nav-label"><i class="fa-solid fa-store"></i> Storefront</span>
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
                     <button type="submit">
                         <span class="admin-nav-label"><i class="fa-solid fa-right-from-bracket"></i> Logout</span>
@@ -90,9 +90,9 @@
                     <p>@yield('subheading', 'Manage the Urbanist store from one place.')</p>
                 </div>
                 <div class="admin-user-card">
-                    <strong>{{ auth()->user()->name }}</strong>
-                    <span>{{ auth()->user()->email }}</span>
-                    <span>{{ ucfirst(auth()->user()->role ?? 'admin') }} account</span>
+                    <strong>{{ auth('admin')->user()->name }}</strong>
+                    <span>{{ auth('admin')->user()->email }}</span>
+                    <span>Admin account</span>
                 </div>
             </div>
 

@@ -135,6 +135,9 @@
 </head>
 
 <body>
+    @php
+        $isAdminSession = auth('admin')->check();
+    @endphp
 
     {{-- preloader --}}
     <x-preloader />
@@ -144,9 +147,9 @@
         <div class="top-bar">
             <div class="container">
                 <div class="contact-info">
-                    <a href="tel:+0123-456-789"><i class="fas fa-phone"></i> <span>+0123-456-789</span></a>
-                    <a href="mailto:example@domain.com"><i class="fas fa-envelope"></i>
-                        <span>example@domain.com</span></a>
+                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $storeSettings['phone_number']) }}"><i class="fas fa-phone"></i> <span>{{ $storeSettings['phone_number'] }}</span></a>
+                    <a href="mailto:{{ $storeSettings['contact_email'] }}"><i class="fas fa-envelope"></i>
+                        <span>{{ $storeSettings['contact_email'] }}</span></a>
                 </div>
 
                 <div class="promo-text">
@@ -217,7 +220,9 @@
         <!-- overlay end -->
 
         <!-- cart menu -->
-        <x-cart-menu />
+        @unless ($isAdminSession)
+            <x-cart-menu />
+        @endunless
         <!-- cart menu end -->
 
         {{-- content --}}
@@ -256,10 +261,12 @@
 
     <!-- scripts -->
     <script src="{{ asset('assets/js/script.js') }}?v={{ time() }}"></script>
-    <script src="{{ asset('assets/js/wishlist.js') }}"></script>
-    {{--
-    <script src="{{ asset('assets/js/cart.js') }}?v={{ time() }}"></script> --}}
-    <script src="{{ asset('assets/js/cart-manager.js') }}?v={{ time() }}"></script>
+    @unless ($isAdminSession)
+        <script src="{{ asset('assets/js/wishlist.js') }}"></script>
+        {{--
+        <script src="{{ asset('assets/js/cart.js') }}?v={{ time() }}"></script> --}}
+        <script src="{{ asset('assets/js/cart-manager.js') }}?v={{ time() }}"></script>
+    @endunless
 
     {{-- Additional Scripts --}}
     @stack('scripts')

@@ -14,6 +14,7 @@
 ])
 
 @php
+    $isAdminSession = auth('admin')->check();
     $user = auth()->user();
     $isInWishlist = $user && $user->isInWishlist($productId);
     
@@ -35,24 +36,28 @@
         @endif
 
         <div class="product-right-overlay">
-            <button type="button"
-                class="wishlist-toggle-btn"
-                data-product-id="{{ $productId }}" 
-                data-initial-state="{{ $isInWishlist ? '1' : '0' }}" 
-                data-auth="{{ auth()->check() ? '1' : '0' }}"
-                title="Add to Wishlist">
-                <i class="{{ $isInWishlist ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart' }}"></i>
-            </button>
+            @unless ($isAdminSession)
+                <button type="button"
+                    class="wishlist-toggle-btn"
+                    data-product-id="{{ $productId }}" 
+                    data-initial-state="{{ $isInWishlist ? '1' : '0' }}" 
+                    data-auth="{{ auth()->check() ? '1' : '0' }}"
+                    title="Add to Wishlist">
+                    <i class="{{ $isInWishlist ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart' }}"></i>
+                </button>
+            @endunless
             <a href="{{ $link }}" title="view"><i class="fa-solid fa-images"></i></a>
         </div>
 
-        {{-- Pass the cart state to the add-to-cart component --}}
-        <x-add-to-cart 
-            :product="$product"
-            :inCart="$isInCart"
-            :cartItemId="$cartItemId"
-            :stockQuantity="$product->stock_quantity"
-        />
+        @unless ($isAdminSession)
+            {{-- Pass the cart state to the add-to-cart component --}}
+            <x-add-to-cart 
+                :product="$product"
+                :inCart="$isInCart"
+                :cartItemId="$cartItemId"
+                :stockQuantity="$product->stock_quantity"
+            />
+        @endunless
     </div>
 
     <div class="product-content">

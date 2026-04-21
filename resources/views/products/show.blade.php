@@ -1,6 +1,6 @@
 <x-layout>
     {{-- page title --}}
-    <x-slot name="title"></x-slot>
+    <x-slot name="title">{{ $product->title }} | Urbanist</x-slot>
 
     {{-- style --}}
     @push ('styles')
@@ -8,9 +8,14 @@
     @endpush
 
     @php
+        $isAdminSession = auth('admin')->check();
         $productId = $product->id;
         $user = auth()->user();
         $isInWishlist = $user && $user->isInWishlist($productId);
+        $galleryImages = collect([$product->display_image_url])
+            ->merge($product->images->pluck('resolved_url'))
+            ->unique()
+            ->values();
     @endphp
 
     <div class="singleProductContainer">
@@ -25,38 +30,30 @@
         <div class="product-main">
             <div class="product-images">
                 <div class="main-image">
-                    <img src="{{ asset( $product->image_url) }}" alt="{{ $product->title }}">
-                    <button type="button"
-                    class="wishlist-toggle-btn"
-                    data-product-id="{{ $productId }}" 
-                    data-initial-state="{{ $isInWishlist ? '1' : '0' }}" 
-                    data-auth="{{ auth()->check() ? '1' : '0' }}"
-                    title="Add to Wishlist">
-                        <i class="{{ $isInWishlist ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart' }}"></i>
-                    </button>
+                    <img id="main-product-image" src="{{ $galleryImages->first() }}" alt="{{ $product->title }}">
+                    @unless ($isAdminSession)
+                        <button type="button"
+                        class="wishlist-toggle-btn"
+                        data-product-id="{{ $productId }}" 
+                        data-initial-state="{{ $isInWishlist ? '1' : '0' }}" 
+                        data-auth="{{ auth()->check() ? '1' : '0' }}"
+                        title="Add to Wishlist">
+                            <i class="{{ $isInWishlist ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart' }}"></i>
+                        </button>
+                    @endunless
                 </div>
 
                 <div class="image-thumbnails">
-                    <div class="thumbnail active" data-image="/api/placeholder/600/500">
-                        <img src="{{asset('storage/' . $product->image_url)}}" alt="">
-                    </div>
-                    <div class="thumbnail" data-image="/api/placeholder/600/500?text=Red">
-                        <img src="{{asset('assets/images/new-arrivals/new-11.webp')}}" alt="">
-                    </div>
-                    <div class="thumbnail" data-image="/api/placeholder/600/500?text=Green">
-                        <img src="{{asset('assets/images/new-arrivals/new-7.webp')}}" alt="">
-                    </div>
-                    <div class="thumbnail" data-image="/api/placeholder/600/500?text=Gray">
-                        <img src="{{asset('assets/images/new-arrivals/new-4.webp')}}" alt="">
-                    </div>
-                    <div class="thumbnail" data-image="/api/placeholder/600/500?text=Black">
-                        <img src="{{asset('assets/images/new-arrivals/new-5.webp')}}" alt="">
-                    </div>
+                    @foreach ($galleryImages as $galleryImage)
+                        <div class="thumbnail {{ $loop->first ? 'active' : '' }}" data-image="{{ $galleryImage }}">
+                            <img src="{{ $galleryImage }}" alt="{{ $product->title }}">
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
             <div class="product-info">
-                <h1 class="product-title">Diamond Halo Stud Chair</h1>
+                <h1 class="product-title">{{ $product->title }}</h1>
                 <div class="rating-container">
                     <div class="stars-con">
                         <span class="star"><i class="fa-regular fa-star"></i></span>
@@ -68,8 +65,10 @@
                     <a href="#reviews" class="review-link"> Reviews</a>
                 </div>
                 <div class="price">
-                    {{$product->sale_price}}
-                    <span class="old-price">{{$product->price}}</span>
+                    ${{ number_format((float) ($product->sale_price ?? $product->price), 2) }}
+                    @if ($product->sale_price)
+                        <span class="old-price">${{ number_format((float) $product->price, 2) }}</span>
+                    @endif
                 </div>
                 <div class="about-product">
                     <div class="availability">
@@ -100,26 +99,28 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="quantity-container">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn" id="decrease-qty">-</button>
-                        <input type="number" min="1" value="1" class="quantity-input" id="qty-input">
-                        <button class="quantity-btn" id="increase-qty">+</button>
+                @unless ($isAdminSession)
+                    <div class="quantity-container">
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" id="decrease-qty">-</button>
+                            <input type="number" min="1" value="1" class="quantity-input" id="qty-input">
+                            <button class="quantity-btn" id="increase-qty">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            Add to Cart
+                        </button>
                     </div>
-                    <button class="add-to-cart-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                        </svg>
-                        Add to Cart
-                    </button>
-                </div>
-                <div class="action-buttons">
-                    <button class="buy-now-btn">
-                        Buy Now
-                    </button>
-                </div>
+                    <div class="action-buttons">
+                        <button class="buy-now-btn">
+                            Buy Now
+                        </button>
+                    </div>
+                @endunless
             </div>
         </div>
 
@@ -337,18 +338,20 @@
             const decreaseBtn = document.getElementById('decrease-qty');
             const increaseBtn = document.getElementById('increase-qty');
             const qtyInput = document.getElementById('qty-input');
-            
-            decreaseBtn.addEventListener('click', function() {
-                const currentValue = parseInt(qtyInput.value);
-                if (currentValue > 1) {
-                    qtyInput.value = currentValue - 1;
-                }
-            });
-            
-            increaseBtn.addEventListener('click', function() {
-                const currentValue = parseInt(qtyInput.value);
-                qtyInput.value = currentValue + 1;
-            });
+
+            if (decreaseBtn && increaseBtn && qtyInput) {
+                decreaseBtn.addEventListener('click', function() {
+                    const currentValue = parseInt(qtyInput.value);
+                    if (currentValue > 1) {
+                        qtyInput.value = currentValue - 1;
+                    }
+                });
+                
+                increaseBtn.addEventListener('click', function() {
+                    const currentValue = parseInt(qtyInput.value);
+                    qtyInput.value = currentValue + 1;
+                });
+            }
             
             // Tab functionality
             const tabItems = document.querySelectorAll('.tab-item');

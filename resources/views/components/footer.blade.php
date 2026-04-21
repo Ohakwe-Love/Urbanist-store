@@ -2,22 +2,22 @@
     <div class="footer-content">
         <div class="footer-section">
             <h3>CONTACT US</h3>
-            <p>Morbi ullamcorper ligula sit amet efficitur pellentesque. Aliquam ornare quam tellus ultricies molestie tortor.</p>
+            <p>Urbanist curates modern furniture, lighting, and decor for calm, livable spaces, with support from product selection through delivery.</p>
             <div class="contact-info">
                 <div class="contact-item">
                     <i class="fas fa-phone"></i>
                     <div class="contact-text-hotline">
                         <p class="hotline">HOTLINE :</p>
-                        <p>+123-456-789</p>
+                        <p>{{ $storeSettings['phone_number'] }}</p>
                     </div>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <p class="contact-text">info@example.com</p>
+                    <p class="contact-text">{{ $storeSettings['contact_email'] }}</p>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-calendar"></i>
-                    <p class="contact-text">Monday till Friday 10 to 6 EST</p>
+                    <p class="contact-text">Monday to Saturday, 9am to 7pm EST</p>
                 </div>
             </div>
         </div>
@@ -64,6 +64,6 @@
     </div>
 
     <div class="footer-bottom">
-        <p>Copyright &copy; <span class="">{{date('Y')}}</span> Website by Lovely_girl. All rights reserved.</p>
+        <p>Copyright &copy; <span class="">{{date('Y')}}</span> {{ $storeSettings['store_name'] }}. All rights reserved.</p>
     </div>
 </footer>

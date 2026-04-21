@@ -15,14 +15,22 @@ class TestUserSeeder extends Seeder
      */
     public function run()
     {
+        User::query()->where('email', 'lovely@love.com')->delete();
+
         $user = User::updateOrCreate(
-            ['email' => 'lovely@love.com'],
+            ['email' => 'customer@urbanist.com'],
             [
-                'name' => 'Love',
-                'username' => 'lovely',
+                'name' => 'Ada Nwosu',
+                'username' => 'adanwosu',
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('12345678'),
-                'role' => User::ROLE_ADMIN,
+                'phone' => '+1 (646) 555-0182',
+                'address' => '14 Prince Street, Apt 5B',
+                'city' => 'New York',
+                'state' => 'NY',
+                'postal_code' => '10012',
+                'country' => 'USA',
+                'role' => User::ROLE_CUSTOMER,
                 'is_active' => true,
             ]
         );

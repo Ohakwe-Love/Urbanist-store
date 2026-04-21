@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\News;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class NewsSeeder extends Seeder
@@ -16,27 +15,25 @@ class NewsSeeder extends Seeder
     {
         $news = require database_path('seeders/data/news.php');
 
+        News::query()
+            ->where('title', 'Product title here')
+            ->delete();
+
         foreach ($news as $newsCard) {
-            $baseSlug = Str::slug($newsCard['title']);
-            $slug = $baseSlug;
-            $counter = 1;
+            $newsEntry = News::withTrashed()->updateOrCreate(
+                ['slug' => $newsCard['slug'] ?? Str::slug($newsCard['title'])],
+                [
+                    'title' => $newsCard['title'],
+                    'description' => $newsCard['description'],
+                    'news_image' => $newsCard['news_image'],
+                    'date' => $newsCard['date'],
+                    'read_time' => $newsCard['read_time'] ?? null,
+                ]
+            );
 
-            // Ensure slug is unique
-            while (DB::table('news')->where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $counter;
-                $counter++;
+            if ($newsEntry->trashed()) {
+                $newsEntry->restore();
             }
-
-            DB::table('news')->insert([
-                'title'         => $newsCard['title'],
-                'slug'          => $slug,
-                'description'   => $newsCard['description'],
-                'news_image'     => $newsCard['news_image'],
-                'date'         => $newsCard['date'],
-                'read_time'    => $newsCard['read_time'] ?? null,
-                'created_at'    => now(),
-                'updated_at'    => now(),
-            ]);
         }
     }
 }

@@ -67,8 +67,8 @@
             <div class="policy-contact">
                 <h3>Contact Us</h3>
                 <p>If you have any questions about these Terms, please contact us at:</p>
-                <p>Email: <a href="mailto:legal@yourstore.com">legal@yourstore.com</a></p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
+                <p>Phone: {{ $storeSettings['phone_number'] }}</p>
             </div>
         </div>
 
@@ -125,8 +125,8 @@
             <div class="policy-contact">
                 <h3>Contact Us</h3>
                 <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-                <p>Email: <a href="mailto:privacy@yourstore.com">privacy@yourstore.com</a></p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
+                <p>Phone: {{ $storeSettings['phone_number'] }}</p>
             </div>
         </div>
 
@@ -194,8 +194,8 @@
             <div class="policy-contact">
                 <h3>Contact Us</h3>
                 <p>If you have any questions about shipping, please contact us at:</p>
-                <p>Email: <a href="mailto:shipping@yourstore.com">shipping@yourstore.com</a></p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
+                <p>Phone: {{ $storeSettings['phone_number'] }}</p>
             </div>
         </div>
 
@@ -228,7 +228,7 @@
             <h3>Return Process</h3>
             <p>To initiate a return, please follow these steps:</p>
             <ol>
-                <li>Contact our customer service team at <a href="mailto:returns@yourstore.com">returns@yourstore.com</a> with your order number and return reason</li>
+                <li>Contact our customer service team at <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a> with your order number and return reason</li>
                 <li>You will receive a Return Merchandise Authorization (RMA) number and return instructions</li>
                 <li>Package your item securely and include the RMA number on the outside of the package</li>
                 <li>Ship your return to the address provided in the return instructions</li>
@@ -241,7 +241,7 @@
             <div class="accordion">
                 <div class="accordion-header">Damaged or Defective Items</div>
                 <div class="accordion-content">
-                    <p>If you receive a damaged or defective product, please contact us immediately at <a href="mailto:support@yourstore.com">support@yourstore.com</a> with photos of the damage and your order number.</p>
+                    <p>If you receive a damaged or defective product, please contact us immediately at <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a> with photos of the damage and your order number.</p>
                     <p>We will arrange for a return shipping label and send a replacement or issue a full refund at our discretion. Damaged or defective items should be reported within 7 days of receipt.</p>
                 </div>
             </div>
@@ -249,8 +249,8 @@
             <div class="policy-contact">
                 <h3>Contact Us</h3>
                 <p>If you have any questions about our return policy, please contact us at:</p>
-                <p>Email: <a href="mailto:returns@yourstore.com">returns@yourstore.com</a></p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
+                <p>Phone: {{ $storeSettings['phone_number'] }}</p>
             </div>
         </div>
 
@@ -295,8 +295,8 @@
             <div class="policy-contact">
                 <h3>Contact Us</h3>
                 <p>If you have any questions about our payment policy, please contact us at:</p>
-                <p>Email: <a href="mailto:billing@yourstore.com">billing@yourstore.com</a></p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
+                <p>Phone: {{ $storeSettings['phone_number'] }}</p>
             </div>
         </div>
 

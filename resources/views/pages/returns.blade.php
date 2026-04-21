@@ -190,8 +190,8 @@
             <h2 class="contact-title">Need Help With Your Return?</h2>
             <p class="contact-text">Our customer service team is available to assist you with any questions or concerns about returns and refunds.</p>
             <p>
-                <a href="mailto:support@yourstore.com" class="contact-link">support@yourstore.com</a> | 
-                <a href="tel:+18001234567" class="contact-link">1-800-123-4567</a>
+                <a href="mailto:{{ $storeSettings['contact_email'] }}" class="contact-link">{{ $storeSettings['contact_email'] }}</a> | 
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $storeSettings['phone_number']) }}" class="contact-link">{{ $storeSettings['phone_number'] }}</a>
             </p>
         </div>
     </div>

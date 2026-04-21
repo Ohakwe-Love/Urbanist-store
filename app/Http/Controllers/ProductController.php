@@ -14,14 +14,15 @@ class ProductController extends Controller
         $page = $request->get('page', 1);
         
         // Get all unique categories for the sidebar
-        $categories = Product::select('category')
+        $categories = Product::visibleOnStorefront()
+            ->select('category')
             ->distinct()
             ->whereNotNull('category')
             ->pluck('category')
             ->toArray();
         
         // Build the query
-        $query = Product::query();
+        $query = Product::visibleOnStorefront();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -32,9 +33,6 @@ class ProductController extends Controller
                 // Optional: handle "in stock" or "sold out" keywords
                 if (stripos($search, 'in stock') !== false) {
                     $sub->orWhere('stock_quantity', '>', 0);
-                }
-                if (stripos($search, 'sold out') !== false) {
-                    $sub->orWhere('stock_quantity', '<=', 0);
                 }
             });
         }
@@ -88,6 +86,8 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        abort_unless($product->isVisibleOnStorefront(), 404);
+
         return view('products.show', compact('product'));
     }
 }

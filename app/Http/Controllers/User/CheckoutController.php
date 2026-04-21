@@ -4,11 +4,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\User;
-use App\Models\Product;
 use App\Services\CartService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
@@ -16,9 +13,24 @@ class CheckoutController extends Controller
         private CartService $cartService
     ) {}
 
-    public function index()
+    public function index(): View
     {
-        return view('user.checkout');
+        $cart = $this->cartService->getCart();
+        $cartData = $this->cartService->getCartData();
+        $subtotal = (float) $cartData['total'];
+        $shipping = $subtotal === 0.0 ? 0.0 : ($subtotal >= 1000 ? 0.0 : 45.0);
+        $tax = round($subtotal * 0.075, 2);
+        $discount = 0.0;
+        $total = $subtotal + $shipping + $tax - $discount;
+
+        return view('user.checkout', [
+            'cartItems' => $cart->items,
+            'subtotal' => $subtotal,
+            'shipping' => $shipping,
+            'tax' => $tax,
+            'discount' => $discount,
+            'total' => $total,
+        ]);
     }
 
 

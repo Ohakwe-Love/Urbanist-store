@@ -1,4 +1,8 @@
 <div class="mobile-menu" id="mobile-menu">
+    @php
+        $isAdminSession = auth('admin')->check();
+    @endphp
+
     <div class="mobile-menu-header">
         <div class="urbanist-logo"><img src="{{asset("assets/images/logo/logo-dark.webp")}}" alt="logo"></div>
         <button class="mobile-menu-close" id="mobile-menu-close">
@@ -12,18 +16,20 @@
         <a href="{{ route('offer') }}">Offer</a>
         <a href="{{ route('shop') }}">Shop</a>
         <a href="{{ route('news') }}">Blog</a>
-        @guest
+        @if ($isAdminSession)
+            <a href="{{ route('admin.dashboard') }}">Admin Panel</a>
+        @elseif (auth('web')->guest())
             <a href="{{ route('login') }}">Account</a>
-        @endguest
+        @endif
     </div>
 
     <!-- Contact us -->
     <div class="mobile-menu-contact">
         <p>
-            Call Us: (012)-345-67890
+            Call Us: {{ $storeSettings['phone_number'] }}
         </p>
 
-        <p>Email: support@domain.com</p>
+        <p>Email: {{ $storeSettings['contact_email'] }}</p>
 
         <div class="socials">
             <a href="#"><i class="fab fa-facebook-f"></i></a>

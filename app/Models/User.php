@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Product::class, 'wishlists');
     }
 
+    public function visibleWishlistProducts()
+    {
+        return $this->wishlistProducts()->visibleOnStorefront();
+    }
+
     public function isInWishlist($productId): bool
     {
         return $this->wishlistProducts()->where('product_id', $productId)->exists();

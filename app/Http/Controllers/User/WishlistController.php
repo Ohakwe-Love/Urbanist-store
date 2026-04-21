@@ -14,10 +14,8 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        // Get authenticated user's wishlist items
-        // with pagination (12 items per page)
         $user = auth()->user();
-        $wishlists = $user->wishlistProducts();
+        $wishlists = $user->visibleWishlistProducts()->get();
 
         return view('user.wishlists', compact('wishlists', 'user'));
     }
@@ -25,8 +23,7 @@ class WishlistController extends Controller
     public function toggle(Product $product, Request $request)
     {
         try {
-            if (!$product) {
-                // \Log::error('Product not found');
+            if (!$product || !$product->isVisibleOnStorefront()) {
                 return response()->json(['error' => 'Product not found'], 404);
             }
 
@@ -46,7 +43,7 @@ class WishlistController extends Controller
                 return response()->json([
                     'status' => 'removed',
                     'message' => 'Product removed from wishlist',
-                    'count' => $user->wishlists()->count()
+                    'count' => $user->visibleWishlistProducts()->count()
 
                 ]);
             }
@@ -60,7 +57,7 @@ class WishlistController extends Controller
             return response()->json([
                 'status' => 'added',
                 'message' => 'Product added to wishlist',
-                'count' => $user->wishlists()->count()
+                'count' => $user->visibleWishlistProducts()->count()
 
             ]);
 

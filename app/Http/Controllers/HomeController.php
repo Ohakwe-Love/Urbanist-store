@@ -10,7 +10,7 @@ class HomeController extends Controller
     // Home Page
     public function index()
     {
-        $products = Product::latest()->limit(8)->get();
+        $products = Product::visibleOnStorefront()->latest()->limit(8)->get();
 
         return view('pages.index')->with('latestNewProducts', $products);
     }

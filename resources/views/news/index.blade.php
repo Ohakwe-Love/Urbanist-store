@@ -16,7 +16,7 @@
                 </a>
 
                 <div class="trending-news-card-details">
-                    <a href="{{route('news.show', $trendingNews->slug)}}" class="trending-news-card-title"><h2>Product title here</h2></a>
+                    <a href="{{route('news.show', $trendingNews->slug)}}" class="trending-news-card-title"><h2>{{ $trendingNews->title }}</h2></a>
                     <p class="trending-news-card-desc">
                         {{Str::limit($trendingNews->description, 100, "...")}}
                     </p>

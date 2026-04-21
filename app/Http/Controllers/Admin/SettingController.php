@@ -12,15 +12,7 @@ class SettingController extends Controller
 {
     public function edit(): View
     {
-        $defaults = [
-            'store_name' => 'Urbanist',
-            'logo_path' => '',
-            'contact_email' => 'hello@example.com',
-            'phone_number' => '+0123-456-789',
-            'address' => '',
-            'payment_gateway_keys' => '',
-            'shipping_settings' => '',
-        ];
+        $defaults = Setting::defaults();
 
         foreach ($defaults as $key => $value) {
             Setting::firstOrCreate(['key' => $key], ['value' => $value]);

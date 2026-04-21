@@ -76,15 +76,10 @@ class Product extends Model
         return $query->where('category', $category);
     }
 
-    // public function scopeInStock($query)
-    // {
-    //     return $query->where('stock_quantity', '>', 0);
-    // }
-
-    // public function scopeSoldOut($query)
-    // {
-    //     return $query->where('stock_quantity', '<=', 0);
-    // }
+    public function scopeVisibleOnStorefront($query)
+    {
+        return $query->where('stock_quantity', '>', 0);
+    }
 
     public function scopeBySize($query, $size)
     {
@@ -138,6 +133,11 @@ class Product extends Model
     public function isInStock($quantity = 1)
     {
         return $this->stock_quantity >= $quantity;
+    }
+
+    public function isVisibleOnStorefront(): bool
+    {
+        return $this->stock_quantity > 0;
     }
 
     public function inCart()

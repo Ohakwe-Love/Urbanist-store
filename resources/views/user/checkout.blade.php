@@ -34,17 +34,17 @@
                         <div class="form-group">
                             <label for="email">Email Address <span class="required">*</span></label>
                             <input type="email" id="email" name="email"
-                                value=" old('email', auth()->user()->email ?? '')" required>
+                                value="{{ old('email', auth()->user()->email ?? '') }}" required>
                             @error('email')
-                                <span class="error-message"> $message</span>
+                                <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="phone" name="phone" value=" old('phone', auth()->user()->phone ?? '')"
+                            <input type="tel" id="phone" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}"
                                 required>
                             @error('phone')
-                                <span class="error-message"> $message</span>
+                                <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -55,69 +55,69 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="first_name">First Name <span class="required">*</span></label>
-                                <input type="text" id="first_name" name="first_name" value=" old('first_name')"
+                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name', auth()->user()->name ? explode(' ', auth()->user()->name)[0] : '') }}"
                                     required>
                                 @error('first_name')
-                                    <span class="error-message"> $message</span>
+                                    <span class="error-message">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Last Name <span class="required">*</span></label>
-                                <input type="text" id="last_name" name="last_name" value=" old('last_name')" required>
+                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name', collect(explode(' ', auth()->user()->name ?? ''))->slice(1)->implode(' ')) }}" required>
                                 @error('last_name')
-                                    <span class="error-message"> $message</span>
+                                    <span class="error-message">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="address">Street Address <span class="required">*</span></label>
-                            <input type="text" id="address" name="address" value=" old('address')" required>
+                            <input type="text" id="address" name="address" value="{{ old('address', auth()->user()->address ?? '') }}" required>
                             @error('address')
-                                <span class="error-message"> $message</span>
+                                <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label for="address_2">Apartment, Suite, etc. (Optional)</label>
-                            <input type="text" id="address_2" name="address_2" value=" old('address_2')">
+                            <input type="text" id="address_2" name="address_2" value="{{ old('address_2') }}">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="city">City <span class="required">*</span></label>
-                                <input type="text" id="city" name="city" value=" old('city')" required>
+                                <input type="text" id="city" name="city" value="{{ old('city', auth()->user()->city ?? '') }}" required>
                                 @error('city')
-                                    <span class="error-message"> $message</span>
+                                    <span class="error-message">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="state">State/Province <span class="required">*</span></label>
-                                <input type="text" id="state" name="state" value=" old('state')" required>
+                                <input type="text" id="state" name="state" value="{{ old('state', auth()->user()->state ?? '') }}" required>
                                 @error('state')
-                                    <span class="error-message"> $message</span>
+                                    <span class="error-message">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="postal_code">Postal Code <span class="required">*</span></label>
-                                <input type="text" id="postal_code" name="postal_code" value=" old('postal_code')"
+                                <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', auth()->user()->postal_code ?? '') }}"
                                     required>
                                 @error('postal_code')
-                                    <span class="error-message"> $message</span>
+                                    <span class="error-message">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="country">Country <span class="required">*</span></label>
                                 <select id="country" name="country" required>
                                     <option value="">Select Country</option>
-                                    <option value="US" old('country')=='US' ? 'selected' : ''>United States</option>
-                                    <option value="CA" old('country')=='CA' ? 'selected' : ''>Canada</option>
-                                    <option value="UK" old('country')=='UK' ? 'selected' : ''>United Kingdom
+                                    <option value="US" @selected(old('country', auth()->user()->country ?? '') === 'US' || old('country', auth()->user()->country ?? '') === 'USA')>United States</option>
+                                    <option value="CA" @selected(old('country', auth()->user()->country ?? '') === 'CA' || old('country', auth()->user()->country ?? '') === 'Canada')>Canada</option>
+                                    <option value="UK" @selected(old('country', auth()->user()->country ?? '') === 'UK' || old('country', auth()->user()->country ?? '') === 'United Kingdom')>United Kingdom
                                     </option>
-                                    <option value="AU" old('country')=='AU' ? 'selected' : ''>Australia</option>
-                                    <option value="NG" old('country')=='NG' ? 'selected' : ''>Nigeria</option>
+                                    <option value="AU" @selected(old('country', auth()->user()->country ?? '') === 'AU' || old('country', auth()->user()->country ?? '') === 'Australia')>Australia</option>
+                                    <option value="NG" @selected(old('country', auth()->user()->country ?? '') === 'NG' || old('country', auth()->user()->country ?? '') === 'Nigeria')>Nigeria</option>
                                 </select>
                                 @error('country')
-                                    <span class="error-message"> $message</span>
+                                    <span class="error-message">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -139,29 +139,29 @@
                                 <div class="form-group">
                                     <label for="billing_first_name">First Name</label>
                                     <input type="text" id="billing_first_name" name="billing_first_name"
-                                        value=" old('billing_first_name')">
+                                        value="{{ old('billing_first_name') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="billing_last_name">Last Name</label>
                                     <input type="text" id="billing_last_name" name="billing_last_name"
-                                        value=" old('billing_last_name')">
+                                        value="{{ old('billing_last_name') }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="billing_address">Street Address</label>
                                 <input type="text" id="billing_address" name="billing_address"
-                                    value=" old('billing_address')">
+                                    value="{{ old('billing_address') }}">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="billing_city">City</label>
                                     <input type="text" id="billing_city" name="billing_city"
-                                        value=" old('billing_city')">
+                                        value="{{ old('billing_city') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="billing_postal_code">Postal Code</label>
                                     <input type="text" id="billing_postal_code" name="billing_postal_code"
-                                        value=" old('billing_postal_code')">
+                                        value="{{ old('billing_postal_code') }}">
                                 </div>
                             </div>
                         </div>
@@ -223,7 +223,7 @@
                         <div class="form-group">
                             <label for="order_notes">Special instructions or delivery notes</label>
                             <textarea id="order_notes" name="order_notes"
-                                placeholder="Any special requests or delivery instructions..."> old('order_notes')</textarea>
+                                placeholder="Any special requests or delivery instructions...">{{ old('order_notes') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -234,33 +234,24 @@
                     <div class="order-items">
                         @forelse($cartItems ?? [] as $item)
                             <div class="order-item">
-                                <img src=" $item->product->image ?? '/images/placeholder.jpg'" alt=" $item->product->name"
+                                <img src="{{ $item->product?->display_image_url ?? asset('assets/images/new-arrivals/new-1.webp') }}" alt="{{ $item->product?->title ?? 'Product' }}"
                                     class="item-image">
                                 <div class="item-details">
-                                    <div class="item-name"> $item->product->name</div>
-                                    <div class="item-variant"> $item->variant ?? 'Default'</div>
-                                    <div class="item-quantity">Qty: $item->quantity</div>
+                                    <div class="item-name">{{ $item->product?->title ?? 'Unavailable product' }}</div>
+                                    <div class="item-variant">{{ $item->product?->category ?? 'Standard item' }}</div>
+                                    <div class="item-quantity">Qty: {{ $item->quantity }}</div>
                                 </div>
-                                <div class="item-price">$ number_format($item->price * $item->quantity, 2)</div>
+                                <div class="item-price">${{ number_format((float) ($item->price * $item->quantity), 2) }}</div>
                             </div>
                         @empty
                             <div class="order-item">
-                                <img src="/images/placeholder.jpg" alt="Product" class="item-image">
+                                <img src="{{ asset('assets/images/new-arrivals/new-1.webp') }}" alt="Empty cart" class="item-image">
                                 <div class="item-details">
-                                    <div class="item-name">Urbanist T-Shirt</div>
-                                    <div class="item-variant">Size: L, Color: Black</div>
-                                    <div class="item-quantity">Qty: 2</div>
+                                    <div class="item-name">Your cart is empty</div>
+                                    <div class="item-variant">Add available products from the shop to continue to checkout.</div>
+                                    <div class="item-quantity">Qty: 0</div>
                                 </div>
-                                <div class="item-price">$59.98</div>
-                            </div>
-                            <div class="order-item">
-                                <img src="/images/placeholder.jpg" alt="Product" class="item-image">
-                                <div class="item-details">
-                                    <div class="item-name">Urbanist Hoodie</div>
-                                    <div class="item-variant">Size: M, Color: Navy</div>
-                                    <div class="item-quantity">Qty: 1</div>
-                                </div>
-                                <div class="item-price">$79.99</div>
+                                <div class="item-price">$0.00</div>
                             </div>
                         @endforelse
                     </div>
@@ -268,7 +259,7 @@
                     <div class="discount-code">
                         <div class="discount-input-group">
                             <input type="text" id="discount_code" name="discount_code" placeholder="Discount code"
-                                value=" old('discount_code')">
+                                value="{{ old('discount_code') }}">
                             <button type="button" class="btn-apply" onclick="applyDiscount()">Apply</button>
                         </div>
                     </div>
@@ -276,25 +267,25 @@
                     <div class="order-totals">
                         <div class="total-row">
                             <span>Subtotal</span>
-                            <span id="subtotal">$ number_format($subtotal ?? 139.97, 2)</span>
+                            <span id="subtotal">${{ number_format((float) ($subtotal ?? 0), 2) }}</span>
                         </div>
                         <div class="total-row">
                             <span>Shipping</span>
-                            <span id="shipping">$ number_format($shipping ?? 10.00, 2)</span>
+                            <span id="shipping">${{ number_format((float) ($shipping ?? 0), 2) }}</span>
                         </div>
                         <div class="total-row">
                             <span>Tax</span>
-                            <span id="tax">$ number_format($tax ?? 12.00, 2)</span>
+                            <span id="tax">${{ number_format((float) ($tax ?? 0), 2) }}</span>
                         </div>
                         @if(isset($discount) && $discount > 0)
                             <div class="total-row discount">
                                 <span>Discount</span>
-                                <span id="discount">-$ number_format($discount, 2)</span>
+                                <span id="discount">-${{ number_format((float) $discount, 2) }}</span>
                             </div>
                         @endif
                         <div class="total-row final">
                             <span>Total</span>
-                            <span id="total">$ number_format($total ?? 161.97, 2)</span>
+                            <span id="total">${{ number_format((float) ($total ?? 0), 2) }}</span>
                         </div>
                     </div>
 

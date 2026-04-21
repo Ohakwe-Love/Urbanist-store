@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
 use App\Services\CartService;
 use App\View\Composers\CartComposer;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +26,16 @@ class AppServiceProvider extends ServiceProvider
     {
         // Share cart data with all views
         View::composer('*', CartComposer::class);
+
+        $storeSettings = Setting::defaults();
+
+        if (Schema::hasTable('settings')) {
+            $storeSettings = array_merge(
+                $storeSettings,
+                Setting::query()->pluck('value', 'key')->toArray()
+            );
+        }
+
+        View::share('storeSettings', $storeSettings);
     }
 }

@@ -1,7 +1,3 @@
-@php
-    $wishlists = auth()->user()->wishlists();
-@endphp
-
 <x-dashboard-layout :user="$user">
     <x-slot name="title">{{ucfirst($user->username)}}  | Urbanist Dashboard</x-slot> 
 
@@ -27,7 +23,7 @@
                     </span>
                 </div>
                 <div class="stats-content">
-                    <h1>300</h1>
+                    <h1>{{ $orderCount }}</h1>
                 </div>
             </a>
             <a class="stats-col" href="{{route('wishlist')}}">
@@ -40,13 +36,7 @@
                     </span>
                 </div>
                 <div class="stats-content">
-                    <h1>
-                        @if ($wishlists)
-                            {{ auth()->user()->wishlists()->count() }}
-                        @else
-                            0
-                        @endif
-                    </h1>
+                    <h1>{{ $wishlistCount }}</h1>
                 </div>
             </a>
             <a class="stats-col" href="">
@@ -60,7 +50,7 @@
                     </span>
                 </div>
                 <div class="stats-content">
-                    <h1>50</h1>
+                    <h1>{{ $paymentCount }}</h1>
                 </div>
             </a>
         </div>
@@ -72,32 +62,28 @@
                     <i class="fas fa-clock"></i>
                     Recent Orders
                 </h2>
-                <a href="" class="view-all">view all</a>
-            </div>
-            
-            <div class="order-item">
-                <div class="order-info">
-                    <div class="order-date">May 28, 2025</div>
-                    <div class="order-id">#ORD-2024-001</div>
-                </div>
-                <div class="order-amount">$76,997.00</div>
+                @if ($recentOrders->isNotEmpty())
+                    <span class="view-all">{{ $recentOrders->count() }} recent</span>
+                @endif
             </div>
 
-            <div class="order-item">
-                <div class="order-info">
-                    <div class="order-date">May 28, 2025</div>
-                    <div class="order-id">#ORD-2024-001</div>
+            @forelse ($recentOrders as $order)
+                <div class="order-item">
+                    <div class="order-info">
+                        <div class="order-date">{{ $order->created_at->format('M d, Y') }}</div>
+                        <div class="order-id">{{ $order->order_number }} • {{ ucfirst($order->status) }}</div>
+                    </div>
+                    <div class="order-amount">${{ number_format((float) $order->total, 2) }}</div>
                 </div>
-                <div class="order-amount">$76,997.00</div>
-            </div>
-
-            <div class="order-item">
-                <div class="order-info">
-                    <div class="order-date">May 28, 2025</div>
-                    <div class="order-id">#ORD-2024-001</div>
+            @empty
+                <div class="order-item">
+                    <div class="order-info">
+                        <div class="order-date">No orders yet</div>
+                        <div class="order-id">Your completed purchases will appear here once you place an order.</div>
+                    </div>
+                    <div class="order-amount">$0.00</div>
                 </div>
-                <div class="order-amount">$76,997.00</div>
-            </div>
+            @endforelse
         </div>
 
         <!-- Quick Actions -->

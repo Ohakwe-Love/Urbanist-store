@@ -54,6 +54,13 @@ class CartController extends Controller
             $product = Product::findOrFail($request->product_id);
             $quantity = $request->input('quantity', 1);
 
+            if (!$product->isVisibleOnStorefront()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This product is no longer available.',
+                ], 404);
+            }
+
             $data = $this->cartService->addItem($product, $quantity);
 
             return response()->json([

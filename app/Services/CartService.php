@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -12,9 +13,9 @@ class CartService
 {
     public function getCart(): Cart  // Change from private to public
     {
-        if (Auth::check()) {
+        if (Auth::guard('web')->check()) {
             $cart = Cart::firstOrCreate([
-                'user_id' => Auth::id()
+                'user_id' => Auth::guard('web')->id(),
             ]);
 
             // $this->mergeSessionCart($cart);
@@ -24,6 +25,8 @@ class CartService
                 'session_id' => $sessionId
             ]);
         }
+
+        $this->removeUnavailableItems($cart);
 
         return $cart->load('items.product');
     }
@@ -121,13 +124,24 @@ class CartService
         ];
     }
 
+    protected function removeUnavailableItems(Cart $cart): void
+    {
+        $unavailableItemIds = $cart->items()
+            ->whereHas('product', fn ($query) => $query->where('stock_quantity', '<=', 0))
+            ->pluck('id');
+
+        if ($unavailableItemIds instanceof Collection && $unavailableItemIds->isNotEmpty()) {
+            CartItem::whereIn('id', $unavailableItemIds)->delete();
+        }
+    }
+
     /**
      * Merge session cart into user cart after login
      */
 
     public function mergeSessionCartIntoUserCart(): void
     {
-        if (!Auth::check()) {
+        if (!Auth::guard('web')->check()) {
             return;
         }
 
@@ -145,7 +159,7 @@ class CartService
         }
 
         $userCart = Cart::firstOrCreate([
-            'user_id' => Auth::id()
+            'user_id' => Auth::guard('web')->id(),
         ]);
         
 

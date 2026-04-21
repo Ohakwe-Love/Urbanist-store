@@ -81,7 +81,7 @@
                                 <li>Estimate shipping costs and delivery times</li>
                             </ul>
                         </div>
-                        <img src="/api/placeholder/600/320" alt="Review Cart" class="step-image">
+                        <img src="{{ asset('assets/images/new-arrivals/new-8.webp') }}" alt="Review Cart" class="step-image">
                     </div>
                 </div>
                 
@@ -101,7 +101,7 @@
                                 <li>Add special delivery instructions if needed</li>
                             </ul>
                         </div>
-                        <img src="/api/placeholder/600/320" alt="Shipping Information" class="step-image">
+                        <img src="{{ asset('assets/images/new-arrivals/new-10.webp') }}" alt="Shipping Information" class="step-image">
                     </div>
                 </div>
                 
@@ -121,7 +121,7 @@
                                 <li>Create an account to easily track your order status</li>
                             </ul>
                         </div>
-                        <img src="/api/placeholder/600/320" alt="Payment" class="step-image">
+                        <img src="{{ asset('assets/images/new-arrivals/new-11.webp') }}" alt="Payment" class="step-image">
                     </div>
                 </div>
             </div>
@@ -205,11 +205,11 @@
                 Our dedicated customer service team is ready to help you with any questions about ordering or navigating our website. We're available 24/7 to ensure your shopping experience is smooth and enjoyable.
             </p>
             <div>
-                <a href="#" class="help-btn">Live Chat</a>
-                <a href="#" class="help-btn">Contact Us</a>
+                <a href="mailto:{{ $storeSettings['contact_email'] }}" class="help-btn">Email Support</a>
+                <a href="{{ route('contact') }}" class="help-btn">Contact Us</a>
             </div>
             <p>
-                Email us at <a href="mailto:support@yourstore.com" class="help-link">support@yourstore.com</a> or call <a href="tel:+18001234567" class="help-link">1-800-123-4567</a>
+                Email us at <a href="mailto:{{ $storeSettings['contact_email'] }}" class="help-link">{{ $storeSettings['contact_email'] }}</a> or call <a href="tel:{{ preg_replace('/[^0-9+]/', '', $storeSettings['phone_number']) }}" class="help-link">{{ $storeSettings['phone_number'] }}</a>
             </p>
         </div>
     </div>

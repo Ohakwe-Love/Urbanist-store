@@ -40,10 +40,10 @@
             <h2>Contact Info</h2>
             <p>Feel free to reach out to us. Urbanist cares.</p>
             <ul>
-                <li><span>Address:</span>123 Suspendis matti, Visaosang Building VST District, NY Accums, North American</li>
-                <li><span>Email:</span> support@domain.com</li>
-                <li><span>Call Us:</span> (012)-345-67890</li>
-                <li><span>Opening time:</span> Our store has re-opened for shopping, exchanges every day <span>11am to 7pm</span></li>
+                <li><span>Address:</span>{{ $storeSettings['address'] }}</li>
+                <li><span>Email:</span> {{ $storeSettings['contact_email'] }}</li>
+                <li><span>Call Us:</span> {{ $storeSettings['phone_number'] }}</li>
+                <li><span>Opening time:</span> Visit us Monday to Saturday for shopping, styling support, and order pickups from <span>9am to 7pm</span></li>
             </ul>
         </div>
     </section>
