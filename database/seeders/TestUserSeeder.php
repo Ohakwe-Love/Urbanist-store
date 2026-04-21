@@ -15,13 +15,17 @@ class TestUserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Love',
-            'username' => 'lovely',
-            'email' => 'lovely@love.com',
-            'email_verified_at' => Carbon::now(),
-            'password' => Hash::make('12345678'),
-        ]);
+        $user = User::updateOrCreate(
+            ['email' => 'lovely@love.com'],
+            [
+                'name' => 'Love',
+                'username' => 'lovely',
+                'email_verified_at' => Carbon::now(),
+                'password' => Hash::make('12345678'),
+                'role' => User::ROLE_ADMIN,
+                'is_active' => true,
+            ]
+        );
 
         return $user;
     }

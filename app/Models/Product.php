@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -18,10 +19,12 @@ class Product extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'description',
         'discount',
         'price',
         'sale_price',
+        'category_id',
         'category',
         'size',
         'stock_quantity',
@@ -44,12 +47,27 @@ class Product extends Model
         return $this->hasMany(ProductSpecification::class);
     }
 
+    public function categoryRelation()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
     protected $casts = [
         'price' => 'decimal:2',
         'sale_price' => 'decimal:2',
         'is_new' => 'boolean',
         'is_featured' => 'boolean',
-        'stock_quantity' => 'integer'
+        'stock_quantity' => 'integer',
     ];
 
     // Scopes for filtering
@@ -112,6 +130,11 @@ class Product extends Model
         return $this->hasMany(Cart::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function isInStock($quantity = 1)
     {
         return $this->stock_quantity >= $quantity;
@@ -126,5 +149,26 @@ class Product extends Model
         return $this->cartItems()
             ->where('user_id', auth()->id())
             ->exists();
+    }
+
+    public function getDisplayImageUrlAttribute(): string
+    {
+        if (!$this->image_url) {
+            return asset('assets/images/new-arrivals/new-1.webp');
+        }
+
+        if (str_starts_with($this->image_url, 'http://') || str_starts_with($this->image_url, 'https://')) {
+            return $this->image_url;
+        }
+
+        if (Storage::disk('public')->exists($this->image_url)) {
+            return asset('storage/'.$this->image_url);
+        }
+
+        if (file_exists(public_path('assets/images/'.$this->image_url))) {
+            return asset('assets/images/'.$this->image_url);
+        }
+
+        return asset($this->image_url);
     }
 }

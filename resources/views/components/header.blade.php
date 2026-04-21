@@ -42,6 +42,12 @@
             <x-cart-icon  />
 
             @auth
+                @if (auth()->user()->isAdmin())
+                    <a href="{{route('admin.dashboard')}}" title="Admin" class="user-action-tag user-action-tag-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span class="user-action-tag-text">Admin</span>
+                    </a>
+                @endif
                 <a href="{{route('dashboard')}}" title="Account" class="user-action-tag user-action-tag-icon">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="user-action-tag-text">Dashboard</span>

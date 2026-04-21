@@ -12,6 +12,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_CUSTOMER = 'customer';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,6 +34,8 @@ class User extends Authenticatable
         'state',
         'postal_code',
         'country',
+        'role',
+        'is_active',
     ];
 
     /**
@@ -55,6 +60,7 @@ class User extends Authenticatable
             'date_of_birth' => 'date',
             'last_login_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -78,5 +84,20 @@ class User extends Authenticatable
     public function isInWishlist($productId): bool
     {
         return $this->wishlistProducts()->where('product_id', $productId)->exists();
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
     }
 }
