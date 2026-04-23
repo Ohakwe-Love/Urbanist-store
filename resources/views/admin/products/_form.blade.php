@@ -60,11 +60,23 @@
     </div>
     <div class="admin-field">
         <label for="image">Primary image</label>
-        <input id="image" name="image" type="file" accept="image/*">
+        <div class="admin-file-field">
+            <input id="image" name="image" type="file" accept="image/*" class="admin-file-input">
+            <label for="image" class="admin-file-label">
+                <span class="admin-file-title">Choose primary image</span>
+                <span class="admin-file-meta">PNG, JPG, WEBP</span>
+            </label>
+        </div>
     </div>
     <div class="admin-field">
         <label for="gallery_images">Gallery images</label>
-        <input id="gallery_images" name="gallery_images[]" type="file" accept="image/*" multiple>
+        <div class="admin-file-field">
+            <input id="gallery_images" name="gallery_images[]" type="file" accept="image/*" multiple class="admin-file-input">
+            <label for="gallery_images" class="admin-file-label">
+                <span class="admin-file-title">Choose gallery images</span>
+                <span class="admin-file-meta">Multiple files allowed</span>
+            </label>
+        </div>
     </div>
     <div class="admin-field">
         <label><input type="checkbox" name="is_new" value="1" @checked(old('is_new', $product->is_new))> Mark as new</label>

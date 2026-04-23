@@ -13,7 +13,6 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
@@ -24,7 +23,7 @@ Route::prefix('admin')
             Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
         });
 
-        Route::middleware([EnsureUserIsAdmin::class])->group(function () {
+        Route::middleware('admin')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -48,7 +48,7 @@
                     <label for="" class="checkbox-label">Remember me</label>
                 </div> --}}
 
-                <a href="" class="forgot-password">Forgot password?</a>
+                <a href="{{ route('password.request') }}" class="forgot-password">Forgot password?</a>
             </div>
 
             <button class="submit-btn">Login</button>

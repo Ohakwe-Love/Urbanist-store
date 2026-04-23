@@ -6,8 +6,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\AddressBookController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\OrderHistoryController;
+use App\Http\Controllers\User\PasswordResetController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\CheckoutController;
@@ -57,7 +60,7 @@ Route::post('/shop/load-more', [ProductController::class, 'loadMore'])->name('sh
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('show');
 
 // guest routes for authentication
-Route::middleware('guest')->group(function () {
+Route::middleware('guest.customer')->group(function () {
 
     // Register and login routes
     Route::controller(AuthController::class)
@@ -76,15 +79,26 @@ Route::middleware('guest')->group(function () {
 
         Route::post('/', 'authenticate')->name('login.authenticate');
     });
+
+    Route::get('/forgot-password', [PasswordResetController::class, 'request'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'email'])->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'reset'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'update'])->name('password.update');
 });
 
 // logout route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Authenticated user routes
-Route::middleware('auth')->prefix('user')->group(function () {
+Route::middleware('customer')->prefix('user')->group(function () {
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/orders', [OrderHistoryController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderHistoryController::class, 'show'])->name('orders.show');
+    Route::get('/addresses', [AddressBookController::class, 'index'])->name('addresses.index');
+    Route::post('/addresses', [AddressBookController::class, 'store'])->name('addresses.store');
+    Route::put('/addresses/{address}', [AddressBookController::class, 'update'])->name('addresses.update');
+    Route::delete('/addresses/{address}', [AddressBookController::class, 'destroy'])->name('addresses.destroy');
 
     // Wishlist routes
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist'); 

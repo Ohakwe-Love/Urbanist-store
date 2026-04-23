@@ -101,6 +101,11 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;

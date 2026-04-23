@@ -93,6 +93,12 @@
                     <strong>{{ auth('admin')->user()->name }}</strong>
                     <span>{{ auth('admin')->user()->email }}</span>
                     <span>Admin account</span>
+                    <form method="POST" action="{{ route('admin.logout') }}" style="margin-top:14px;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger" style="width:100%;">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </button>
+                    </form>
                 </div>
             </div>
 

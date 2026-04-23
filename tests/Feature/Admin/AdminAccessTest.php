@@ -33,9 +33,36 @@ it('hides storefront shopping and customer auth actions for admin sessions', fun
 
     $response->assertOk();
     $response->assertSee(route('admin.dashboard'), false);
+    $response->assertSee(route('admin.logout'), false);
     $response->assertDontSee(route('wishlist'), false);
     $response->assertDontSee(route('login'), false);
     $response->assertDontSee(route('register'), false);
     $response->assertDontSee('id="cart-toggle"', false);
     $response->assertDontSee('id="cart-menu"', false);
+});
+
+it('does not allow admin sessions to open customer auth pages', function () {
+    $admin = Admin::factory()->create();
+
+    $this->actingAs($admin, 'admin')
+        ->get(route('login'))
+        ->assertRedirect(route('admin.dashboard'));
+
+    $this->actingAs($admin, 'admin')
+        ->get(route('register'))
+        ->assertRedirect(route('admin.dashboard'));
+
+    $this->actingAs($admin, 'admin')
+        ->get(route('password.request'))
+        ->assertRedirect(route('admin.dashboard'));
+});
+
+it('allows admins to log out from their admin session', function () {
+    $admin = Admin::factory()->create();
+
+    $this->actingAs($admin, 'admin')
+        ->post(route('admin.logout'))
+        ->assertRedirect(route('admin.login'));
+
+    $this->assertGuest('admin');
 });

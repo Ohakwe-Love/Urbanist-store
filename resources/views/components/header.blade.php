@@ -53,6 +53,13 @@
                     <i class="fa-solid fa-shield-halved"></i>
                     <span class="user-action-tag-text">Admin</span>
                 </a>
+                <form action="{{ route('admin.logout') }}" method="POST" style="display:inline-flex; margin:0;">
+                    @csrf
+                    <button type="submit" title="Admin logout" class="user-action-tag user-action-tag-icon" style="border:0; background:transparent; cursor:pointer;">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span class="user-action-tag-text">Logout</span>
+                    </button>
+                </form>
             @endif
 
             @if ($hasCustomerSession)
