@@ -12,8 +12,26 @@ class CouponController extends Controller
 {
     public function index(): View
     {
+        $search = trim(request()->string('search')->toString());
+        $normalizedSearch = strtolower($search);
+
         return view('admin.coupons.index', [
-            'coupons' => Coupon::latest()->paginate(12),
+            'coupons' => Coupon::query()
+                ->when($search !== '', function ($query) use ($search, $normalizedSearch) {
+                    $query->where(function ($subQuery) use ($search, $normalizedSearch) {
+                        $subQuery->where('code', 'like', "%{$search}%")
+                            ->orWhere('type', 'like', "%{$search}%");
+
+                        if (str_contains($normalizedSearch, 'inactive')) {
+                            $subQuery->orWhere('is_active', false);
+                        } elseif (str_contains($normalizedSearch, 'active')) {
+                            $subQuery->orWhere('is_active', true);
+                        }
+                    });
+                })
+                ->latest()
+                ->paginate(12)
+                ->withQueryString(),
         ]);
     }
 

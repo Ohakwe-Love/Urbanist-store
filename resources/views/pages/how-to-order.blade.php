@@ -71,7 +71,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Proceed to Checkout</h3>
                         <p class="step-description">
-                            When you're ready to complete your purchase, click on the shopping cart icon and select "Proceed to Checkout". Review your order details before continuing.
+                            When you're ready to complete your purchase, sign in to your account, open your cart, and continue to checkout. Review your order details before moving to payment.
                         </p>
                         <div class="step-tips">
                             <h4 class="step-tips-title">Checkout Tips:</h4>
@@ -193,7 +193,7 @@
             <div class="accordion">
                 <div class="accordion-header">Do I need to create an account to place an order?</div>
                 <div class="accordion-content">
-                    <p>No, you can place an order as a guest without creating an account. However, creating an account offers several benefits: faster checkout on future orders, ability to track your orders, access to order history, and eligibility for loyalty rewards. Account creation is quick, requiring only your email address and a password.</p>
+                    <p>Yes. You need an account before checkout so we can securely tie your payment, delivery details, and order history to the right profile. Once you're signed in, checkout is faster and you'll be able to track every order from your dashboard.</p>
                 </div>
             </div>
         </div>

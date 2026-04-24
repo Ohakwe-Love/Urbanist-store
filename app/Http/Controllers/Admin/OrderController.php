@@ -11,10 +11,33 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim($request->string('search')->toString());
+
         return view('admin.orders.index', [
-            'orders' => Order::with(['user', 'items', 'payment', 'shipment'])->latest()->paginate(12),
+            'orders' => Order::query()
+                ->with(['user', 'items', 'payment', 'shipment'])
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($subQuery) use ($search) {
+                        $subQuery->where('order_number', 'like', "%{$search}%")
+                            ->orWhere('status', 'like', "%{$search}%")
+                            ->orWhere('payment_status', 'like', "%{$search}%")
+                            ->orWhere('fulfillment_status', 'like', "%{$search}%")
+                            ->orWhere('shipping_name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhereHas('user', function ($userQuery) use ($search) {
+                                $userQuery->where('name', 'like', "%{$search}%")
+                                    ->orWhere('email', 'like', "%{$search}%");
+                            })
+                            ->orWhereHas('items', function ($itemsQuery) use ($search) {
+                                $itemsQuery->where('product_title', 'like', "%{$search}%");
+                            });
+                    });
+                })
+                ->latest()
+                ->paginate(12)
+                ->withQueryString(),
         ]);
     }
 

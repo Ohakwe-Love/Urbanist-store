@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $news = News::latest()->paginate(9);
+        $search = trim($request->string('search')->toString());
 
-        $trendingNews = News::latest()->first();
+        $query = News::query()
+            ->when($search !== '', function ($builder) use ($search) {
+                $builder->where(function ($subQuery) use ($search) {
+                    $subQuery->where('title', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('date', 'like', "%{$search}%");
+                });
+            })
+            ->latest();
+
+        $news = $query->paginate(9)->withQueryString();
+
+        $trendingNews = (clone $query)->first();
 
         return view('news.index', [
             'news' => $news,

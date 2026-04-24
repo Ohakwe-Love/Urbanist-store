@@ -11,10 +11,22 @@ use Illuminate\View\View;
 
 class TagController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim($request->string('search')->toString());
+
         return view('admin.tags.index', [
-            'tags' => Tag::withCount('products')->orderBy('name')->paginate(12),
+            'tags' => Tag::query()
+                ->withCount('products')
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('slug', 'like', "%{$search}%");
+                    });
+                })
+                ->orderBy('name')
+                ->paginate(12)
+                ->withQueryString(),
         ]);
     }
 

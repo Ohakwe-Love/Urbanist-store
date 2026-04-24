@@ -10,10 +10,37 @@ use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim($request->string('search')->toString());
+
         return view('admin.reviews.index', [
-            'reviews' => Review::with(['product', 'user'])->latest()->paginate(12),
+            'reviews' => Review::query()
+                ->with(['product', 'user'])
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($subQuery) use ($search) {
+                        $subQuery->where('title', 'like', "%{$search}%")
+                            ->orWhere('body', 'like', "%{$search}%")
+                            ->orWhereHas('product', function ($productQuery) use ($search) {
+                                $productQuery->where('title', 'like', "%{$search}%");
+                            })
+                            ->orWhereHas('user', function ($userQuery) use ($search) {
+                                $userQuery->where('name', 'like', "%{$search}%")
+                                    ->orWhere('email', 'like', "%{$search}%");
+                            });
+
+                        if (str_contains(strtolower($search), 'approved')) {
+                            $subQuery->orWhere('is_approved', true);
+                        }
+
+                        if (str_contains(strtolower($search), 'pending')) {
+                            $subQuery->orWhere('is_approved', false);
+                        }
+                    });
+                })
+                ->latest()
+                ->paginate(12)
+                ->withQueryString(),
         ]);
     }
 

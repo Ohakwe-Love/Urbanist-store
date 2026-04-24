@@ -67,7 +67,11 @@ Route::middleware('guest.customer')->group(function () {
     ->prefix('register')
     ->group(function(){
         Route::get('/', 'register')->name('register');
-
+        Route::get('/verify', 'showRegistrationCodeForm')->name('register.verify');
+        Route::get('/details', 'showRegistrationDetailsForm')->name('register.details');
+        Route::post('/email', 'sendRegistrationVerificationEmail')->name('register.email');
+        Route::post('/verify-code', 'verifyRegistrationCode')->name('register.verify-code');
+        Route::post('/change-email', 'resetRegistrationVerification')->name('register.change-email');
         Route::post('/', 'store')->name('register.store');
     });
 
@@ -88,6 +92,9 @@ Route::middleware('guest.customer')->group(function () {
 
 // logout route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/checkout/paystack/callback', [CheckoutController::class, 'callback'])->name('checkout.callback');
+Route::post('/payments/paystack/webhook', [CheckoutController::class, 'webhook'])->name('payments.paystack.webhook');
 
 // Authenticated user routes
 Route::middleware('customer')->prefix('user')->group(function () {
@@ -119,6 +126,8 @@ Route::middleware('customer')->prefix('user')->group(function () {
     
     // Checkout routes would go here
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/complete/{order}', [CheckoutController::class, 'complete'])->name('checkout.complete');
     
     // Route::prefix('checkout')->name('checkout.')->group(function () {
 

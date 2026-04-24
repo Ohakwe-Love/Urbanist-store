@@ -17,7 +17,16 @@
         </div>
 
         <div class="admin-card">
-            <div class="admin-card-header"><h2>Existing tags</h2></div>
+            <div class="admin-card-header">
+                <h2>Existing tags</h2>
+                <form method="GET" class="admin-inline-actions">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search tags">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                    @if (request('search'))
+                        <a href="{{ route('admin.tags.index') }}" class="btn btn-secondary">Reset</a>
+                    @endif
+                </form>
+            </div>
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>

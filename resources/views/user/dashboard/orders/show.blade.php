@@ -45,7 +45,7 @@
                                 </div>
                             @endif
                         </div>
-                        <strong>${{ number_format((float) $item->total_price, 2) }}</strong>
+                        <strong>{{ $order->currency_symbol }}{{ number_format((float) $item->total_price, 2) }}</strong>
                     </div>
                 @endforeach
             </div>
@@ -54,10 +54,10 @@
         <aside class="order-detail-panel">
             <h2>Order summary</h2>
             <div class="detail-list">
-                <span>Subtotal: ${{ number_format((float) $order->subtotal, 2) }}</span>
-                <span>Discount: ${{ number_format((float) $order->discount_total, 2) }}</span>
-                <span>Shipping: ${{ number_format((float) $order->shipping_fee, 2) }}</span>
-                <strong>Total: ${{ number_format((float) $order->total, 2) }}</strong>
+                <span>Subtotal: {{ $order->currency_symbol }}{{ number_format((float) $order->subtotal, 2) }}</span>
+                <span>Discount: {{ $order->currency_symbol }}{{ number_format((float) $order->discount_total, 2) }}</span>
+                <span>Shipping: {{ $order->currency_symbol }}{{ number_format((float) $order->shipping_fee, 2) }}</span>
+                <strong>Total: {{ $order->currency_symbol }}{{ number_format((float) $order->total, 2) }}</strong>
             </div>
 
             <h2 style="margin-top:24px;">Payment</h2>

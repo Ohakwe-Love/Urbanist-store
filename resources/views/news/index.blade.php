@@ -7,9 +7,16 @@
 
     <section class="news-wrapper">
         <div class="page-route"><a href="{{route('home')}}">Home</a>&ensp;/&ensp; News</div>
+        <form action="{{ route('news') }}" method="GET" class="news-search-form">
+            <input type="search" name="search" value="{{ request('search') }}" placeholder="Search articles, topics, or dates">
+            <button type="submit">Search</button>
+            @if (request('search'))
+                <a href="{{ route('news') }}" class="news-search-reset">Reset</a>
+            @endif
+        </form>
         
         @if ($trendingNews)
-            <h1 class="updates-heading">Updates from Urbanist</h1>
+            <h1 class="updates-heading">{{ request('search') ? 'News Search Results' : 'Updates from Urbanist' }}</h1>
             <div class="trending-news-card">
                 <a href="{{route('news.show', $trendingNews->slug)}}" class="trending-news-card-img">
                     <img src="{{ asset( $trendingNews->news_image)}}" alt="{{$trendingNews->slug}}">

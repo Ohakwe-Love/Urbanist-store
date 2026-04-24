@@ -12,7 +12,9 @@ class EnsureUserIsCustomer
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::guard('web')->check()) {
-            return redirect()->route('login');
+            return redirect()
+                ->guest(route('login'))
+                ->with('error', 'Please log in to continue.');
         }
 
         $user = Auth::guard('web')->user();

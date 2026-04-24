@@ -65,4 +65,14 @@ class Order extends Model
     {
         return $this->hasOne(Shipment::class);
     }
+
+    public function getCurrencySymbolAttribute(): string
+    {
+        return match (strtoupper((string) $this->currency)) {
+            'NGN' => 'N',
+            'GHS' => 'GH¢',
+            'ZAR' => 'R',
+            default => '$',
+        };
+    }
 }

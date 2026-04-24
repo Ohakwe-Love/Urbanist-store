@@ -99,24 +99,57 @@ overlay.addEventListener('click', () => {
 });
 
 // Get all slides and pagination dots
+const heroContainer = document.querySelector('.hero-container');
 const heroSlides = document.querySelectorAll('.hero-container .hero-slide');
 const heroPagination = document.querySelectorAll('.hero-container .dot');
 
-// Add click event listeners to dots
-heroPagination.forEach(dot => {
-    dot.addEventListener('click', () => {
-        // Get the slide index from the data attribute
-        const slideIndex = parseInt(dot.getAttribute('data-slide'));
-        
-        // Remove active class from all heroSlides and dots
+if (heroSlides.length && heroPagination.length) {
+    let currentHeroSlide = Array.from(heroSlides).findIndex(slide => slide.classList.contains('active'));
+    let heroAutoPlay = null;
+
+    const setActiveHeroSlide = (slideIndex) => {
         heroSlides.forEach(slide => slide.classList.remove('active'));
         heroPagination.forEach(dot => dot.classList.remove('active'));
-        
-        // Add active class to the selected slide and dot
+
         heroSlides[slideIndex].classList.add('active');
-        dot.classList.add('active');
+        heroPagination[slideIndex].classList.add('active');
+        currentHeroSlide = slideIndex;
+    };
+
+    const startHeroAutoPlay = () => {
+        stopHeroAutoPlay();
+
+        heroAutoPlay = setInterval(() => {
+            const nextSlide = (currentHeroSlide + 1) % heroSlides.length;
+            setActiveHeroSlide(nextSlide);
+        }, 5000);
+    };
+
+    const stopHeroAutoPlay = () => {
+        if (heroAutoPlay) {
+            clearInterval(heroAutoPlay);
+            heroAutoPlay = null;
+        }
+    };
+
+    if (currentHeroSlide < 0) {
+        currentHeroSlide = 0;
+        setActiveHeroSlide(currentHeroSlide);
+    }
+
+    heroPagination.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const slideIndex = parseInt(dot.getAttribute('data-slide'));
+            setActiveHeroSlide(slideIndex);
+            startHeroAutoPlay();
+        });
     });
-});
+
+    heroContainer?.addEventListener('mouseenter', stopHeroAutoPlay);
+    heroContainer?.addEventListener('mouseleave', startHeroAutoPlay);
+
+    startHeroAutoPlay();
+}
 
 // close popup
 const closeButton = document.querySelector('.close-button');

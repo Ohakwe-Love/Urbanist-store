@@ -5,9 +5,15 @@
 @section('subheading', 'Control discounts, expiry windows, and campaign availability.')
 
 @section('content')
-    <div class="admin-card">
+        <div class="admin-card">
         <div class="admin-card-header">
-            <h2>Coupons</h2>
+            <form method="GET" class="admin-inline-actions">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search coupons">
+                <button class="btn btn-secondary" type="submit">Search</button>
+                @if (request('search'))
+                    <a href="{{ route('admin.coupons.index') }}" class="btn btn-secondary">Reset</a>
+                @endif
+            </form>
             <a href="{{ route('admin.coupons.create') }}" class="btn btn-primary">Create coupon</a>
         </div>
         <div class="admin-table-wrap">

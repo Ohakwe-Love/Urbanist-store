@@ -60,7 +60,7 @@
 
                         <div class="order-summary-row">
                             <span>{{ $order->items->sum('quantity') }} item(s)</span>
-                            <strong>${{ number_format((float) $order->total, 2) }}</strong>
+                            <strong>{{ $order->currency_symbol }}{{ number_format((float) $order->total, 2) }}</strong>
                         </div>
 
                         <div class="order-items-preview">

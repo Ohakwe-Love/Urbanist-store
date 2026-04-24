@@ -87,7 +87,13 @@
                 <button type="submit" class="clear-cart-btn cart-buttons" id="clear-cart">Clear Cart</button>
             </form>
 
-            <a href="#" class="cart-buttons checkout-btn">Checkout</a>
+            <a href="{{ route('checkout') }}" class="cart-buttons checkout-btn">
+                @auth
+                    Checkout
+                @else
+                    Login to Checkout
+                @endauth
+            </a>
         </div>
     </div>
 @endif

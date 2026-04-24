@@ -10,8 +10,10 @@ use Illuminate\View\View;
 
 class ContentBlockController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim($request->string('search')->toString());
+
         $defaults = [
             'home_banner' => 'Homepage banner',
             'promotional_section' => 'Promotional section',
@@ -25,7 +27,17 @@ class ContentBlockController extends Controller
         }
 
         return view('admin.content.index', [
-            'blocks' => ContentBlock::orderBy('title')->get(),
+            'blocks' => ContentBlock::query()
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($subQuery) use ($search) {
+                        $subQuery->where('title', 'like', "%{$search}%")
+                            ->orWhere('key', 'like', "%{$search}%")
+                            ->orWhere('content', 'like', "%{$search}%");
+                    });
+                })
+                ->orderBy('title')
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 

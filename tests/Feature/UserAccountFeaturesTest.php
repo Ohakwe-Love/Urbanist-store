@@ -3,8 +3,10 @@
 use App\Models\Admin;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\RegistrationEmailVerification;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\VerifyRegistrationEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
@@ -26,6 +28,25 @@ function accountProduct(array $attributes = []): Product
     ], $attributes));
 }
 
+function registrationVerificationCodeFor(string $email): string
+{
+    $code = null;
+
+    Notification::assertSentOnDemand(VerifyRegistrationEmail::class, function ($notification, array $channels, object $notifiable) use ($email, &$code) {
+        if (($notifiable->routes['mail'] ?? null) !== $email) {
+            return false;
+        }
+
+        $code = $notification->verificationCode();
+
+        return in_array('mail', $channels, true);
+    });
+
+    expect($code)->not->toBeNull();
+
+    return $code;
+}
+
 it('sends a password reset link to a known user', function () {
     Notification::fake();
 
@@ -42,6 +63,74 @@ it('sends a password reset link to a known user', function () {
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
+it('sends an email verification code before allowing registration to continue', function () {
+    Notification::fake();
+
+    $response = $this->post(route('register.email'), [
+        'email' => 'newcustomer@example.com',
+    ]);
+
+    $response->assertRedirect(route('register.verify'));
+    $response->assertSessionHas('success');
+
+    $this->assertDatabaseHas('registration_email_verifications', [
+        'email' => 'newcustomer@example.com',
+        'verified_at' => null,
+    ]);
+
+    expect(registrationVerificationCodeFor('newcustomer@example.com'))->toHaveLength(6);
+});
+
+it('does not allow a customer to finish registration before verifying their email', function () {
+    $response = $this->post(route('register.store'), [
+        'name' => 'Tobi Adebayo',
+        'username' => 'tobiad',
+        'email' => 'tobi@example.com',
+        'password' => 'Str0ng!Pass',
+        'password_confirmation' => 'Str0ng!Pass',
+        'agreement' => 1,
+    ]);
+
+    $response->assertRedirect(route('register.verify'));
+    $response->assertSessionHas('error');
+
+    $this->assertDatabaseMissing('users', [
+        'email' => 'tobi@example.com',
+    ]);
+});
+
+it('completes registration after the email address is verified', function () {
+    Notification::fake();
+
+    $this->post(route('register.email'), [
+        'email' => 'verifiedcustomer@example.com',
+    ])->assertRedirect(route('register.verify'));
+
+    $this->post(route('register.verify-code'), [
+        'email' => 'verifiedcustomer@example.com',
+        'code' => registrationVerificationCodeFor('verifiedcustomer@example.com'),
+    ])->assertRedirect(route('register.details'));
+
+    $this->post(route('register.store'), [
+        'name' => 'Verified Customer',
+        'username' => 'verifiedcustomer',
+        'email' => 'verifiedcustomer@example.com',
+        'password' => 'Str0ng!Pass',
+        'password_confirmation' => 'Str0ng!Pass',
+        'agreement' => 1,
+    ])->assertRedirect(route('login'));
+
+    $user = User::where('email', 'verifiedcustomer@example.com')->first();
+
+    expect($user)->not->toBeNull();
+    expect($user->email_verified_at)->not->toBeNull();
+    expect($user->role)->toBe(User::ROLE_CUSTOMER);
+
+    $this->assertDatabaseMissing('registration_email_verifications', [
+        'email' => 'verifiedcustomer@example.com',
+    ]);
+});
+
 it('redirects guests to the customer login form for customer-only pages', function () {
     $this->get(route('dashboard'))
         ->assertRedirect(route('login'));
@@ -56,6 +145,32 @@ it('allows active customers to access customer-only pages', function () {
         ->get(route('dashboard'))
         ->assertOk()
         ->assertSee('Welcome back');
+});
+
+it('blocks login for users whose email has not been verified', function () {
+    $user = User::factory()->create([
+        'email' => 'notverified@example.com',
+        'password' => Hash::make('Str0ng!Pass'),
+        'email_verified_at' => null,
+    ]);
+
+    $response = $this->post(route('login.authenticate'), [
+        'login' => $user->email,
+        'password' => 'Str0ng!Pass',
+    ]);
+
+    $response->assertSessionHasErrors('login');
+    $this->assertGuest();
+});
+
+it('does not expose admin login links on customer auth pages', function () {
+    $this->get(route('login'))
+        ->assertOk()
+        ->assertDontSee(route('admin.login'), false);
+
+    $this->get(route('register'))
+        ->assertOk()
+        ->assertDontSee(route('admin.login'), false);
 });
 
 it('blocks inactive customers from customer-only pages', function () {

@@ -10,6 +10,9 @@
             <form method="GET" class="admin-inline-actions">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products">
                 <button class="btn btn-secondary" type="submit">Search</button>
+                @if (request('search'))
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Reset</a>
+                @endif
             </form>
             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Add product</a>
         </div>

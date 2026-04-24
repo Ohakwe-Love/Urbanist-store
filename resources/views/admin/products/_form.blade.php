@@ -63,6 +63,14 @@
         <div class="admin-file-field">
             <input id="image" name="image" type="file" accept="image/*" class="admin-file-input">
             <label for="image" class="admin-file-label">
+                <span class="admin-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 16V6"></path>
+                        <path d="m8.5 9.5 3.5-3.5 3.5 3.5"></path>
+                        <path d="M20 16.5v1a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-1"></path>
+                        <rect x="4" y="3.5" width="16" height="16" rx="2.5" ry="2.5" opacity="0.18"></rect>
+                    </svg>
+                </span>
                 <span class="admin-file-title">Choose primary image</span>
                 <span class="admin-file-meta">PNG, JPG, WEBP</span>
             </label>
@@ -73,6 +81,17 @@
         <div class="admin-file-field">
             <input id="gallery_images" name="gallery_images[]" type="file" accept="image/*" multiple class="admin-file-input">
             <label for="gallery_images" class="admin-file-label">
+                <span class="admin-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 16V6"></path>
+                        <path d="m8.5 9.5 3.5-3.5 3.5 3.5"></path>
+                        <path d="M20 16.5v1a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-1"></path>
+                        <path d="M8 20v-2"></path>
+                        <path d="M12 20v-2"></path>
+                        <path d="M16 20v-2"></path>
+                        <rect x="4" y="3.5" width="16" height="16" rx="2.5" ry="2.5" opacity="0.18"></rect>
+                    </svg>
+                </span>
                 <span class="admin-file-title">Choose gallery images</span>
                 <span class="admin-file-meta">Multiple files allowed</span>
             </label>

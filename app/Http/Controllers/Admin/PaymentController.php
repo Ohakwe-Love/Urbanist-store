@@ -11,10 +11,27 @@ use Illuminate\View\View;
 
 class PaymentController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim($request->string('search')->toString());
+
         return view('admin.payments.index', [
-            'payments' => Payment::with('order')->latest()->paginate(12),
+            'payments' => Payment::query()
+                ->with('order')
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($subQuery) use ($search) {
+                        $subQuery->where('payment_reference', 'like', "%{$search}%")
+                            ->orWhere('method', 'like', "%{$search}%")
+                            ->orWhere('status', 'like', "%{$search}%")
+                            ->orWhereHas('order', function ($orderQuery) use ($search) {
+                                $orderQuery->where('order_number', 'like', "%{$search}%")
+                                    ->orWhere('shipping_name', 'like', "%{$search}%");
+                            });
+                    });
+                })
+                ->latest()
+                ->paginate(12)
+                ->withQueryString(),
         ]);
     }
 

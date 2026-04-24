@@ -1,405 +1,193 @@
 <x-layout>
-
-    <x-slot name="title">Checkout - Urbanist Store</x-slot>
+    <x-slot name="title">Checkout | Urbanist Store</x-slot>
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/css/checkout.css') }}">
     @endpush
-    <div class="checkout-container">
-        <div class="checkout-header">
+
+    @php
+        $user = auth()->user();
+        $nameParts = collect(explode(' ', $user->name ?? ''))->filter()->values();
+        $firstName = old('first_name', $defaultShippingAddress?->recipient_name ? collect(explode(' ', $defaultShippingAddress->recipient_name))->first() : ($nameParts->first() ?? ''));
+        $lastName = old('last_name', $defaultShippingAddress?->recipient_name ? collect(explode(' ', $defaultShippingAddress->recipient_name))->slice(1)->implode(' ') : $nameParts->slice(1)->implode(' '));
+    @endphp
+
+    <section class="checkout-hero">
+        <div class="checkout-hero-inner">
+            <p class="checkout-kicker">Urbanist</p>
             <h1>Checkout</h1>
-            <div class="checkout-steps">
-                <div class="step">
-                    <span class="step-number">1</span>
-                    <span>Shopping Cart</span>
-                </div>
-                <div class="step active">
-                    <span class="step-number">2</span>
-                    <span>Checkout Details</span>
-                </div>
-                <div class="step">
-                    <span class="step-number">3</span>
-                    <span>Order Complete</span>
-                </div>
-            </div>
+            <p>Complete your order securely with Paystack.</p>
         </div>
+    </section>
 
-        <form action="" method="POST" id="checkoutForm">
-            @csrf
-            <div class="checkout-content">
-                <div class="checkout-form">
-                    <!-- Contact Information -->
-                    <div class="form-section">
-                        <h2>Contact Information</h2>
-                        <div class="form-group">
-                            <label for="email">Email Address <span class="required">*</span></label>
-                            <input type="email" id="email" name="email"
-                                value="{{ old('email', auth()->user()->email ?? '') }}" required>
-                            @error('email')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="phone" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}"
-                                required>
-                            @error('phone')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Shipping Address -->
-                    <div class="form-section">
-                        <h2>Shipping Address</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="first_name">First Name <span class="required">*</span></label>
-                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name', auth()->user()->name ? explode(' ', auth()->user()->name)[0] : '') }}"
-                                    required>
-                                @error('first_name')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name">Last Name <span class="required">*</span></label>
-                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name', collect(explode(' ', auth()->user()->name ?? ''))->slice(1)->implode(' ')) }}" required>
-                                @error('last_name')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="address">Street Address <span class="required">*</span></label>
-                            <input type="text" id="address" name="address" value="{{ old('address', auth()->user()->address ?? '') }}" required>
-                            @error('address')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="address_2">Apartment, Suite, etc. (Optional)</label>
-                            <input type="text" id="address_2" name="address_2" value="{{ old('address_2') }}">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="city">City <span class="required">*</span></label>
-                                <input type="text" id="city" name="city" value="{{ old('city', auth()->user()->city ?? '') }}" required>
-                                @error('city')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State/Province <span class="required">*</span></label>
-                                <input type="text" id="state" name="state" value="{{ old('state', auth()->user()->state ?? '') }}" required>
-                                @error('state')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="postal_code">Postal Code <span class="required">*</span></label>
-                                <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', auth()->user()->postal_code ?? '') }}"
-                                    required>
-                                @error('postal_code')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="country">Country <span class="required">*</span></label>
-                                <select id="country" name="country" required>
-                                    <option value="">Select Country</option>
-                                    <option value="US" @selected(old('country', auth()->user()->country ?? '') === 'US' || old('country', auth()->user()->country ?? '') === 'USA')>United States</option>
-                                    <option value="CA" @selected(old('country', auth()->user()->country ?? '') === 'CA' || old('country', auth()->user()->country ?? '') === 'Canada')>Canada</option>
-                                    <option value="UK" @selected(old('country', auth()->user()->country ?? '') === 'UK' || old('country', auth()->user()->country ?? '') === 'United Kingdom')>United Kingdom
-                                    </option>
-                                    <option value="AU" @selected(old('country', auth()->user()->country ?? '') === 'AU' || old('country', auth()->user()->country ?? '') === 'Australia')>Australia</option>
-                                    <option value="NG" @selected(old('country', auth()->user()->country ?? '') === 'NG' || old('country', auth()->user()->country ?? '') === 'Nigeria')>Nigeria</option>
-                                </select>
-                                @error('country')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="save_address" name="save_address" value="1">
-                            <label for="save_address">Save this address for next time</label>
-                        </div>
-                    </div>
-
-                    <!-- Billing Address -->
-                    <div class="form-section">
-                        <h2>Billing Address</h2>
-                        <div class="checkbox-group" style="margin-top: 0; margin-bottom: 15px;">
-                            <input type="checkbox" id="same_as_shipping" name="same_as_shipping" value="1" checked>
-                            <label for="same_as_shipping">Same as shipping address</label>
-                        </div>
-                        <div id="billing_fields" style="display: none;">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="billing_first_name">First Name</label>
-                                    <input type="text" id="billing_first_name" name="billing_first_name"
-                                        value="{{ old('billing_first_name') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="billing_last_name">Last Name</label>
-                                    <input type="text" id="billing_last_name" name="billing_last_name"
-                                        value="{{ old('billing_last_name') }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="billing_address">Street Address</label>
-                                <input type="text" id="billing_address" name="billing_address"
-                                    value="{{ old('billing_address') }}">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="billing_city">City</label>
-                                    <input type="text" id="billing_city" name="billing_city"
-                                        value="{{ old('billing_city') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="billing_postal_code">Postal Code</label>
-                                    <input type="text" id="billing_postal_code" name="billing_postal_code"
-                                        value="{{ old('billing_postal_code') }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Payment Method -->
-                    <div class="form-section">
-                        <h2>Payment Method</h2>
-                        <div class="payment-methods">
-                            <label class="payment-option selected">
-                                <input type="radio" name="payment_method" value="card" checked>
-                                <span>Credit/Debit Card</span>
-                            </label>
-                            <div class="payment-details active" id="card_details">
-                                <div class="form-group">
-                                    <label for="card_number">Card Number <span class="required">*</span></label>
-                                    <input type="text" id="card_number" name="card_number"
-                                        placeholder="1234 5678 9012 3456">
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="expiry_date">Expiry Date <span class="required">*</span></label>
-                                        <input type="text" id="expiry_date" name="expiry_date" placeholder="MM/YY">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cvv">CVV <span class="required">*</span></label>
-                                        <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="paypal">
-                                <span>PayPal</span>
-                            </label>
-                            <div class="payment-details" id="paypal_details">
-                                <p style="font-size: var(--text-small-font-size); color: var(--color-dark-gray);">
-                                    You will be redirected to PayPal to complete your purchase.
-                                </p>
-                            </div>
-
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="bank_transfer">
-                                <span>Bank Transfer</span>
-                            </label>
-                            <div class="payment-details" id="bank_details">
-                                <p
-                                    style="font-size: var(--text-small-font-size); color: var(--color-dark-gray); margin-bottom: 10px;">
-                                    Transfer payment to our bank account. Your order will be processed after payment
-                                    confirmation.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Order Notes -->
-                    <div class="form-section">
-                        <h2>Order Notes (Optional)</h2>
-                        <div class="form-group">
-                            <label for="order_notes">Special instructions or delivery notes</label>
-                            <textarea id="order_notes" name="order_notes"
-                                placeholder="Any special requests or delivery instructions...">{{ old('order_notes') }}</textarea>
-                        </div>
-                    </div>
+    <div class="checkout-shell">
+        <div class="checkout-page">
+            <div class="checkout-progress" aria-label="Checkout progress">
+                <div class="checkout-progress-item is-complete">
+                    <span>1</span>
+                    <strong>Cart</strong>
                 </div>
-
-                <!-- Order Summary Sidebar -->
-                <div class="order-summary">
-                    <h2>Order Summary</h2>
-                    <div class="order-items">
-                        @forelse($cartItems ?? [] as $item)
-                            <div class="order-item">
-                                <img src="{{ $item->product?->display_image_url ?? asset('assets/images/new-arrivals/new-1.webp') }}" alt="{{ $item->product?->title ?? 'Product' }}"
-                                    class="item-image">
-                                <div class="item-details">
-                                    <div class="item-name">{{ $item->product?->title ?? 'Unavailable product' }}</div>
-                                    <div class="item-variant">{{ $item->product?->category ?? 'Standard item' }}</div>
-                                    <div class="item-quantity">Qty: {{ $item->quantity }}</div>
-                                </div>
-                                <div class="item-price">${{ number_format((float) ($item->price * $item->quantity), 2) }}</div>
-                            </div>
-                        @empty
-                            <div class="order-item">
-                                <img src="{{ asset('assets/images/new-arrivals/new-1.webp') }}" alt="Empty cart" class="item-image">
-                                <div class="item-details">
-                                    <div class="item-name">Your cart is empty</div>
-                                    <div class="item-variant">Add available products from the shop to continue to checkout.</div>
-                                    <div class="item-quantity">Qty: 0</div>
-                                </div>
-                                <div class="item-price">$0.00</div>
-                            </div>
-                        @endforelse
-                    </div>
-
-                    <div class="discount-code">
-                        <div class="discount-input-group">
-                            <input type="text" id="discount_code" name="discount_code" placeholder="Discount code"
-                                value="{{ old('discount_code') }}">
-                            <button type="button" class="btn-apply" onclick="applyDiscount()">Apply</button>
-                        </div>
-                    </div>
-
-                    <div class="order-totals">
-                        <div class="total-row">
-                            <span>Subtotal</span>
-                            <span id="subtotal">${{ number_format((float) ($subtotal ?? 0), 2) }}</span>
-                        </div>
-                        <div class="total-row">
-                            <span>Shipping</span>
-                            <span id="shipping">${{ number_format((float) ($shipping ?? 0), 2) }}</span>
-                        </div>
-                        <div class="total-row">
-                            <span>Tax</span>
-                            <span id="tax">${{ number_format((float) ($tax ?? 0), 2) }}</span>
-                        </div>
-                        @if(isset($discount) && $discount > 0)
-                            <div class="total-row discount">
-                                <span>Discount</span>
-                                <span id="discount">-${{ number_format((float) $discount, 2) }}</span>
-                            </div>
-                        @endif
-                        <div class="total-row final">
-                            <span>Total</span>
-                            <span id="total">${{ number_format((float) ($total ?? 0), 2) }}</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-submit">Place Order</button>
-                    <div class="secure-checkout">
-                        <span class="secure-icon">🔒</span>
-                        Secure Checkout
-                    </div>
+                <div class="checkout-progress-item is-active">
+                    <span>2</span>
+                    <strong>Checkout</strong>
+                </div>
+                <div class="checkout-progress-item">
+                    <span>3</span>
+                    <strong>Complete</strong>
                 </div>
             </div>
-        </form>
+
+            <form action="{{ route('checkout.store') }}" method="POST" class="checkout-grid" id="checkoutForm">
+                @csrf
+
+                <section class="checkout-main-card">
+                    <div class="checkout-block">
+                        <div class="checkout-block-heading">
+                            <h2>Customer Information</h2>
+                            <p>We’ll use these details for your receipt and delivery updates.</p>
+                        </div>
+
+                        @error('cart')
+                            <div class="checkout-alert">{{ $message }}</div>
+                        @enderror
+
+                        <div class="checkout-form-grid">
+                            <div class="checkout-field">
+                                <label for="first_name">First name <span>*</span></label>
+                                <input type="text" id="first_name" name="first_name" value="{{ $firstName }}" required>
+                                @error('first_name') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="last_name">Last name <span>*</span></label>
+                                <input type="text" id="last_name" name="last_name" value="{{ $lastName }}" required>
+                                @error('last_name') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="email">Email <span>*</span></label>
+                                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                @error('email') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="phone">Phone <span>*</span></label>
+                                <input type="text" id="phone" name="phone" value="{{ old('phone', $defaultShippingAddress?->phone ?? $user->phone) }}" required>
+                                @error('phone') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-block">
+                        <div class="checkout-block-heading">
+                            <h2>Shipping Address</h2>
+                            <p>Tell us where you want your order delivered.</p>
+                        </div>
+
+                        <div class="checkout-form-grid">
+                            <div class="checkout-field checkout-field-full">
+                                <label for="address">Address <span>*</span></label>
+                                <input type="text" id="address" name="address" value="{{ old('address', $defaultShippingAddress?->address_line_1 ?? $user->address) }}" required>
+                                @error('address') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field checkout-field-full">
+                                <label for="address_2">Apartment, suite, etc.</label>
+                                <input type="text" id="address_2" name="address_2" value="{{ old('address_2', $defaultShippingAddress?->address_line_2) }}">
+                                @error('address_2') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="city">City <span>*</span></label>
+                                <input type="text" id="city" name="city" value="{{ old('city', $defaultShippingAddress?->city ?? $user->city) }}" required>
+                                @error('city') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="state">State <span>*</span></label>
+                                <input type="text" id="state" name="state" value="{{ old('state', $defaultShippingAddress?->state ?? $user->state) }}" required>
+                                @error('state') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="postal_code">ZIP code <span>*</span></label>
+                                <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $defaultShippingAddress?->postal_code ?? $user->postal_code) }}" required>
+                                @error('postal_code') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="checkout-field">
+                                <label for="country">Country <span>*</span></label>
+                                <select id="country" name="country" required>
+                                    @php
+                                        $selectedCountry = old('country', $defaultShippingAddress?->country ?? $user->country ?? 'Nigeria');
+                                    @endphp
+                                    @foreach (['Nigeria', 'United States', 'Canada', 'United Kingdom', 'Australia'] as $country)
+                                        <option value="{{ $country }}" @selected($selectedCountry === $country)>{{ $country }}</option>
+                                    @endforeach
+                                </select>
+                                @error('country') <span class="checkout-error">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <label class="checkout-check">
+                            <input type="checkbox" name="save_address" value="1" @checked(old('save_address'))>
+                            <span>Save this address for future checkout</span>
+                        </label>
+                    </div>
+
+                    <div class="checkout-block">
+                        <div class="checkout-block-heading">
+                            <h2>Payment Method</h2>
+                            <p>You’ll be redirected to Paystack to complete payment securely.</p>
+                        </div>
+
+                        <div class="checkout-payment-card">
+                            <div class="checkout-payment-badge">Secure</div>
+                            <div>
+                                <strong>Paystack</strong>
+                                <p>Cards, bank transfer, bank app, USSD, and other supported channels are handled on Paystack’s hosted checkout.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-block">
+                        <div class="checkout-block-heading">
+                            <h2>Order Notes (Optional)</h2>
+                            <p>Add delivery notes or anything our team should know.</p>
+                        </div>
+
+                        <div class="checkout-field checkout-field-full">
+                            <textarea id="order_notes" name="order_notes" placeholder="Special instructions for your order...">{{ old('order_notes') }}</textarea>
+                            @error('order_notes') <span class="checkout-error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="checkout-summary-card">
+                    <div class="checkout-summary-head">
+                        <h2>Order Summary</h2>
+                        <a href="{{ route('shop') }}">Continue shopping</a>
+                    </div>
+
+                    <div class="checkout-summary-items">
+                        @foreach ($cartItems as $item)
+                            <article class="checkout-summary-item">
+                                <img src="{{ $item->product?->display_image_url ?? asset('assets/images/new-arrivals/new-1.webp') }}" alt="{{ $item->product?->title ?? 'Product' }}">
+                                <div>
+                                    <strong>{{ $item->product?->title ?? 'Unavailable product' }}</strong>
+                                    <span>{{ $item->product?->category ?? 'Standard item' }}</span>
+                                    <small>Qty: {{ $item->quantity }}</small>
+                                </div>
+                                <em>{{ $currencySymbol }}{{ number_format((float) ($item->price * $item->quantity), 2) }}</em>
+                            </article>
+                        @endforeach
+                    </div>
+
+                    <div class="checkout-summary-totals">
+                        <div><span>Subtotal</span><strong>{{ $currencySymbol }}{{ number_format((float) $subtotal, 2) }}</strong></div>
+                        <div><span>Shipping</span><strong>{{ $shipping > 0 ? $currencySymbol.number_format((float) $shipping, 2) : 'Free' }}</strong></div>
+                        @if ($discount > 0)
+                            <div><span>Discount</span><strong>-{{ $currencySymbol }}{{ number_format((float) $discount, 2) }}</strong></div>
+                        @endif
+                        <div class="is-total"><span>Total</span><strong>{{ $currencySymbol }}{{ number_format((float) $total, 2) }}</strong></div>
+                    </div>
+
+                    <button type="submit" class="checkout-submit">Proceed To Paystack</button>
+                    <p class="checkout-summary-note">By placing your order, you’ll be redirected to Paystack to complete payment and then returned here automatically.</p>
+                </aside>
+            </form>
+        </div>
     </div>
-
-    <script>
-        // Toggle billing address fields
-        document.getElementById('same_as_shipping').addEventListener('change', function () {
-            const billingFields = document.getElementById('billing_fields');
-            billingFields.style.display = this.checked ? 'none' : 'block';
-        });
-
-        // Payment method selection
-        document.querySelectorAll('.payment-option input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', function () {
-                // Remove selected class from all options
-                document.querySelectorAll('.payment-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-
-                // Add selected class to parent label
-                this.closest('.payment-option').classList.add('selected');
-
-                // Hide all payment details
-                document.querySelectorAll('.payment-details').forEach(detail => {
-                    detail.classList.remove('active');
-                });
-
-                // Show selected payment details
-                const paymentType = this.value;
-                const detailsId = paymentType === 'card' ? 'card_details' :
-                    paymentType === 'paypal' ? 'paypal_details' :
-                        'bank_details';
-                document.getElementById(detailsId).classList.add('active');
-            });
-        });
-
-        // Apply discount code
-        function applyDiscount() {
-            const code = document.getElementById('discount_code').value;
-            if (code.trim() === '') {
-                alert('Please enter a discount code');
-                return;
-            }
-
-            // Make AJAX request to apply discount
-            fetch(' route("checkout.apply-discount")', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': ' csrf_token()'
-                },
-                body: JSON.stringify({ code: code })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update totals
-                        document.getElementById('subtotal').textContent = '$' + data.subtotal.toFixed(2);
-                        document.getElementById('shipping').textContent = '$' + data.shipping.toFixed(2);
-                        document.getElementById('tax').textContent = '$' + data.tax.toFixed(2);
-                        document.getElementById('total').textContent = '$' + data.total.toFixed(2);
-
-                        alert('Discount applied successfully!');
-                    } else {
-                        alert(data.message || 'Invalid discount code');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error applying discount code');
-                });
-        }
-
-        // Form validation
-        document.getElementById('checkoutForm').addEventListener('submit', function (e) {
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-
-            if (paymentMethod === 'card') {
-                const cardNumber = document.getElementById('card_number').value;
-                const expiryDate = document.getElementById('expiry_date').value;
-                const cvv = document.getElementById('cvv').value;
-
-                if (!cardNumber || !expiryDate || !cvv) {
-                    e.preventDefault();
-                    alert('Please fill in all card details');
-                    return false;
-                }
-            }
-        });
-
-        // Format card number input
-        document.getElementById('card_number')?.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\s/g, '');
-            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-            e.target.value = formattedValue;
-        });
-
-        // Format expiry date
-        document.getElementById('expiry_date')?.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            e.target.value = value;
-        });
-    </script>
-
 </x-layout>

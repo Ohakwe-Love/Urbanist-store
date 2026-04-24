@@ -10,6 +10,9 @@
             <form method="GET" class="admin-inline-actions">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users">
                 <button class="btn btn-secondary" type="submit">Search</button>
+                @if (request('search'))
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Reset</a>
+                @endif
             </form>
         </div>
 
