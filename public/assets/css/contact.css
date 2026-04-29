@@ -79,22 +79,22 @@
    width: 35%;
 }
 
-.contactWrapper .contactAddress ul{
-   list-style: none;
-   display: flex;
-   justify-content: space-between;
-   align-items: flex-start;
-   gap: 20px;
-   flex-direction: column;
-   font-size: var(--text-small-font-size);
+.contactWrapper .contactAddress ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-direction: column;
+    font-size: var(--text-small-font-size);
 }
 
-.contactWrapper .contactAddress ul li{
+.contactWrapper .contactAddress ul li {
    line-height: 1.5;
 }
 
-.contactWrapper .contactAddress ul li span{
-   font-weight: 600;
+.contactWrapper .contactAddress ul li span {
+    font-weight: 600;
 }
 
 @media (max-width: 990px) {

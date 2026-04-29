@@ -329,7 +329,7 @@
 
 @media (max-width: 992px) {
     .about-company-content {
-    flex-direction: column;
+        flex-direction: column;
     }
     
     .section {

@@ -44,6 +44,7 @@
         <div class="contactAddress">
             <h2>{{ $contactBlock['meta']['sidebar_heading'] ?? 'Contact Info' }}</h2>
             <p>{{ $contactBlock['meta']['sidebar_content'] ?? 'Feel free to reach out to us. Urbanist cares.' }}</p>
+
             <ul>
                 <li><span>Address:</span>{{ $storeSettings['address'] }}</li>
                 <li><span>Email:</span> {{ $storeSettings['contact_email'] }}</li>

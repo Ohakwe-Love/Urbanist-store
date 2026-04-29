@@ -2107,12 +2107,15 @@ footer {
     padding: 60px 30px 30px;
 }
 
+
+
 .footer-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 50px;
     font-size: var(--text-small-font-size);
+    gap: 30px;
 }
 
 .footer-section:nth-child(1) {
@@ -2133,6 +2136,7 @@ footer {
     margin-bottom: 25px;
     font-weight: 700;
     letter-spacing: 0.5px;
+    text-transform: none;
 }
 
 .footer-section p {
@@ -2168,7 +2172,12 @@ footer {
 .footer-section .contact-text {
     line-height: 1;
     margin-bottom: 0px;
+
+    a {
+        color: inherit;
+    }
 }
+
 
 .footer-section .hotline {
     margin-bottom: 5px !important;

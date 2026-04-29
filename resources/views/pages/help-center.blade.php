@@ -15,6 +15,8 @@
 
     <section class="help-center-container">
         <div class="help-center-header">
+            <div class="page-route"><a href="{{ route('home') }}">Home</a>&ensp;/&ensp; Help Center</div>
+            <span class="help-center-kicker">Support desk</span>
             <h1>How can we help?</h1>
             <p>Find quick answers about orders, delivery, returns, and account support. If you still need us, our team is one message away.</p>
         </div>
@@ -104,53 +106,6 @@
                 <div class="faq-answer">
                     Please send us your payment reference and the email used during checkout through the contact form. We can review the payment record from the admin office and help reconcile the order if needed.
                 </div>
-            </div>
-        </section>
-
-        <section class="popular-articles">
-            <h2>Popular guides</h2>
-            <div class="articles-grid">
-                <article class="article-card">
-                    <div class="article-img">
-                        <i class="fas fa-box-open" style="font-size: 2.25rem; color: var(--primary-color);"></i>
-                    </div>
-                    <div class="article-content">
-                        <h3>How to place an order smoothly</h3>
-                        <p>A quick walkthrough for browsing, checking out, and tracking your Urbanist purchase.</p>
-                        <a href="{{ route('how-to-order') }}">
-                            Read guide
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
-                        </a>
-                    </div>
-                </article>
-
-                <article class="article-card">
-                    <div class="article-img">
-                        <i class="fas fa-rotate-left" style="font-size: 2.25rem; color: var(--primary-color);"></i>
-                    </div>
-                    <div class="article-content">
-                        <h3>Returns, exchanges, and eligibility</h3>
-                        <p>See which items are returnable, what timelines apply, and how to contact the team.</p>
-                        <a href="{{ route('returns') }}">
-                            View policy
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
-                        </a>
-                    </div>
-                </article>
-
-                <article class="article-card">
-                    <div class="article-img">
-                        <i class="fas fa-file-shield" style="font-size: 2.25rem; color: var(--primary-color);"></i>
-                    </div>
-                    <div class="article-content">
-                        <h3>Store policies and customer protections</h3>
-                        <p>Understand privacy, order handling, customer rights, and the details behind our policies.</p>
-                        <a href="{{ route('policies') }}">
-                            Read policies
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
-                        </a>
-                    </div>
-                </article>
             </div>
         </section>
 

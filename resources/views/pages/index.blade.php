@@ -47,19 +47,19 @@
     <!-- grid-show -->
     <div class="grid-show">
         <div class="grid-show-col">
-            <img src="{{asset('assets/images/grid-show/grid-show-1.webp')}}" alt="grid-show-col-1">
+            <img src="{{asset('assets/images/grid-show/grid-show-1.webp')}}" alt="Layered neutral living room">
             <a href="{{route('shop')}}" class="shop-the-look-btn">Shop the look</a>
         </div>
         <div class="grid-show-col">
-            <img src="{{asset('assets/images/grid-show/grid-show-2.webp')}}" alt="grid-show-col-1">
+            <img src="{{asset('assets/images/grid-show/grid-show-2.webp')}}" alt="Statement furniture composition">
             <a href="{{route('shop')}}" class="shop-the-look-btn">Shop the look</a>
         </div>
         <div class="grid-show-col">
-            <img src="{{asset('assets/images/grid-show/grid-show-3.webp')}}" alt="grid-show-col-1">
+            <img src="{{asset('assets/images/grid-show/grid-show-3.webp')}}" alt="Accent decor styling">
             <a href="{{route('shop')}}" class="shop-the-look-btn">Shop the look</a>
         </div>
         <div class="grid-show-col">
-            <img src="{{asset('assets/images/grid-show/grid-show-4.webp')}}" alt="grid-show-col-1">
+            <img src="{{asset('assets/images/grid-show/grid-show-4.webp')}}" alt="Comfortable bedroom furniture">
             <a href="{{route('shop')}}" class="shop-the-look-btn">Shop the look</a>
         </div>
     </div>

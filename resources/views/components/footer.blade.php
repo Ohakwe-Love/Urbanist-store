@@ -10,8 +10,8 @@
     @endphp
     <div class="footer-content">
         <div class="footer-section">
-            <h3>CONTACT US</h3>
-            <p>Urbanist curates modern furniture, lighting, and decor for calm, livable spaces, with support from product selection through delivery.</p>
+            <h3>{{ $storeSettings['store_name'] }}</h3>
+            <p>Modern furniture, lighting, and decor selected for calm, livable spaces.</p>
             <div class="contact-info">
                 <div class="contact-item">
                     <i class="fas fa-phone"></i>
@@ -32,7 +32,7 @@
         </div>
     
         <div class="footer-section">
-            <h3>HELP</h3>
+            <h3>Help</h3>
             <ul class="footer-links">
             <li><a href="{{ route('help-center') }}">Help Center</a></li>
             <li><a href="{{ route('how-to-order') }}">Shipping Info</a></li>
@@ -44,7 +44,7 @@
         </div>
     
         <div class="footer-section">
-            <h3>COMPANY</h3>
+            <h3>Company</h3>
             <ul class="footer-links">
                 <li><a href="{{route('about')}}">About Us</a></li>
                 <li><a href="{{ route('services') }}">Services</a></li>
@@ -55,8 +55,8 @@
         </div>
     
         <div class="footer-section">
-            <h3>NEWSLETTER</h3>
-            <p>Get 15% off your first purchases! Plus, be the first to know about sales new product launches and exclusive offers!</p>
+            <h3>Newsletter</h3>
+            <p>Be the first to hear about launches, offers, and fresh pieces for the home.</p>
             <form action="{{ route('newsletter.store') }}" method="POST" class="newsletter-form">
                 @csrf
                 <input type="email" name="email" placeholder="Your Email Address" value="{{ old('email') }}" aria-label="Newsletter email">
