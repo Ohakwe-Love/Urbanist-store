@@ -125,6 +125,10 @@ h2 {
     position: relative;
 }
 
+.top-bar .currency {
+    display: none;
+}
+
 .top-bar .language-currency .clicked img,
 .top-bar .language-currency .language-option img,
 .top-bar .language-currency .currency-option img {
@@ -2246,7 +2250,10 @@ footer .socials a {
     padding-top: 30px;
     text-align: center;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
+
+    p {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
 }
 
 @media (max-width: 1024px) {
