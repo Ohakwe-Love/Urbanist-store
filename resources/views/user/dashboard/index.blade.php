@@ -1,5 +1,5 @@
 <x-dashboard-layout :user="$user">
-    <x-slot name="title">{{ucfirst($user->username)}}  | Urbanist Dashboard</x-slot> 
+    <x-slot name="title">{{ucfirst($user->username)}}  | Urbanist Dashboard</x-slot>
 
     <div class="dashboard-header">
         <div>
@@ -11,9 +11,8 @@
     </div>
 
     <div class="dashboard-content">
-        {{-- stats --}}
         <div class="stats-row">
-            <a class="stats-col" href="">
+            <a class="stats-col" href="{{ route('orders.index') }}">
                 <div class="stats-header">
                     <p>total orders</p>
                     <span class="stats-icon">
@@ -39,7 +38,7 @@
                     <h1>{{ $wishlistCount }}</h1>
                 </div>
             </a>
-            <a class="stats-col" href="">
+            <a class="stats-col" href="{{ route('payments.index') }}">
                 <div class="stats-header">
                     <p>total payments</p>
                     <span class="stats-icon">
@@ -55,7 +54,6 @@
             </a>
         </div>
 
-        <!-- Recent Orders -->
         <div class="recent-orders">
             <div class="recent-orders-header">
                 <h2 class="dashboard-details-header">
@@ -71,9 +69,9 @@
                 <div class="order-item">
                     <div class="order-info">
                         <div class="order-date">{{ $order->created_at->format('M d, Y') }}</div>
-                        <div class="order-id">{{ $order->order_number }} • {{ ucfirst($order->status) }}</div>
+                        <div class="order-id">{{ $order->order_number }} | {{ ucfirst($order->status) }}</div>
                     </div>
-                    <div class="order-amount">${{ number_format((float) $order->total, 2) }}</div>
+                    <div class="order-amount">{{ $order->currency_symbol }}{{ number_format((float) $order->total, 2) }}</div>
                 </div>
             @empty
                 <div class="order-item">
@@ -86,7 +84,6 @@
             @endforelse
         </div>
 
-        <!-- Quick Actions -->
         <div class="quick-actions">
             <div class="quick-actions-header dashboard-details-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -94,9 +91,9 @@
                 </svg>
                 <h2>Quick Actions</h2>
             </div>
-            
+
             <div class="quick-actions-row">
-                <a href="{{route('shop')}}" class="quick-actions-col" >
+                <a href="{{route('shop')}}" class="quick-actions-col">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
@@ -105,7 +102,7 @@
                     <div>shop now</div>
                 </a>
 
-                <a href="{{route('profileEdit')}}" class="quick-actions-col" target="_blank" rel="noopener noreferrer">
+                <a href="{{route('profileEdit')}}" class="quick-actions-col">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
@@ -113,9 +110,9 @@
                     <div>edit profile</div>
                 </a>
 
-                <a href="#" class="quick-actions-col">
-                    <i class="fas fa-file-export"></i>
-                    <div>share link</div>
+                <a href="{{ route('addresses.index') }}" class="quick-actions-col">
+                    <i class="fas fa-location-dot"></i>
+                    <div>manage addresses</div>
                 </a>
             </div>
         </div>

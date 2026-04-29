@@ -31,6 +31,12 @@ class SettingController extends Controller
             'contact_email' => ['required', 'email', 'max:255'],
             'phone_number' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
+            'business_hours' => ['nullable', 'string', 'max:255'],
+            'facebook_url' => ['nullable', 'url', 'max:255'],
+            'pinterest_url' => ['nullable', 'url', 'max:255'],
+            'instagram_url' => ['nullable', 'url', 'max:255'],
+            'twitter_url' => ['nullable', 'url', 'max:255'],
+            'tiktok_url' => ['nullable', 'url', 'max:255'],
             'payment_gateway_keys' => ['nullable', 'string'],
             'shipping_settings' => ['nullable', 'string'],
         ]);

@@ -52,7 +52,6 @@
             height: 100%;
             border: 6px solid rgba(0, 0, 0, 0.1);
             border-top-color: var(--color-hover);
-            /* spinner color */
             border-radius: 50%;
             animation: spin 1.2s linear infinite;
             z-index: 1;
@@ -114,22 +113,16 @@
         }
     </style>
 
-    <!-- custom css -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v={{ time() }}">
 
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico')}}" type="image/x-icon">
 
-
-    <!-- fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    {{-- iziToast --}}
     <link rel="stylesheet" href="{{ asset('assets/css/iziToast.min.css') }}">
 
-    {{-- other styles --}}
     @stack('styles')
 
 </head>
@@ -139,11 +132,9 @@
         $isAdminSession = auth('admin')->check();
     @endphp
 
-    {{-- preloader --}}
     <x-preloader />
 
     <main>
-        <!-- top-bar -->
         <div class="top-bar">
             <div class="container">
                 <div class="contact-info">
@@ -190,62 +181,43 @@
                             </div>
                             <div class="currency-option">
                                 <img src="{{asset('assets/images/flags/deu.svg')}}" alt="Europe">
-                                Europe | EUR €
+                                Europe | EUR
                             </div>
                             <div class="currency-option">
                                 <img src="{{asset('assets/images/flags/eng.svg')}}" alt="United Kingdom">
-                                United Kingdom | GBP £
+                                United Kingdom | GBP
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- top-bar end -->
 
-        <!-- header -->
         <x-header />
-        <!-- header end -->
 
-        <!-- Search Popup -->
         <x-search-popup />
-        <!-- search end -->
 
-        <!-- Mobile Menu -->
         <x-mobile-menu />
-        <!-- mobile menu end -->
 
-        <!-- overlay -->
         <div class="overlay" id="overlay"></div>
-        <!-- overlay end -->
 
-        <!-- cart menu -->
         @unless ($isAdminSession)
             <x-cart-menu />
         @endunless
-        <!-- cart menu end -->
 
-        {{-- content --}}
         {{ $slot }}
-        <!-- content end -->
 
-        <!-- back to top -->
         <div class="back-to-top">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="18 15 12 9 6 15"></polyline>
             </svg>
         </div>
-        <!-- back to top end -->
 
-        <!-- footer -->
         <x-footer />
-        {{-- footer end --}}
     </main>
 
-    {{-- script --}}
     <script>
-        // preloader
         window.addEventListener('load', () => {
             const loader = document.querySelector('.pre-loader-container');
             loader.style.opacity = '0';
@@ -254,24 +226,17 @@
         });
     </script>
 
-    <!-- ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-
-    <!-- scripts -->
     <script src="{{ asset('assets/js/script.js') }}?v={{ time() }}"></script>
     @unless ($isAdminSession)
         <script src="{{ asset('assets/js/wishlist.js') }}"></script>
-        {{--
-        <script src="{{ asset('assets/js/cart.js') }}?v={{ time() }}"></script> --}}
         <script src="{{ asset('assets/js/cart-manager.js') }}?v={{ time() }}"></script>
     @endunless
 
-    {{-- Additional Scripts --}}
     @stack('scripts')
 
-    {{-- iziToast --}}
     <script src="{{ asset('assets/js/iziToast.min.js') }}?v={{ time() }}"></script>
 
     @if (Session::has('success'))

@@ -44,7 +44,7 @@
                             <td><a href="{{ route('admin.orders.show', $order) }}" class="btn-link">Open</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan="6"><div class="empty-state">Orders will show here once the checkout pipeline starts creating them.</div></td></tr>
+                        <tr><td colspan="6"><div class="empty-state">No orders have been placed yet.</div></td></tr>
                     @endforelse
                 </tbody>
             </table>

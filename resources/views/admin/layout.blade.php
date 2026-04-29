@@ -14,7 +14,9 @@
 </head>
 <body class="admin-body">
     <div class="admin-shell">
-        <aside class="admin-sidebar">
+        <button type="button" class="admin-sidebar-overlay" data-admin-sidebar-close aria-label="Close sidebar"></button>
+
+        <aside class="admin-sidebar" id="adminSidebar">
             <a href="{{ route('admin.dashboard') }}" class="admin-brand">
                 <small>Urbanist Store</small>
                 <strong>Admin Panel</strong>
@@ -61,6 +63,14 @@
                     <span class="admin-nav-label"><i class="fa-solid fa-pen-to-square"></i> Content</span>
                     <i class="fa-solid fa-angle-right"></i>
                 </a>
+                <a href="{{ route('admin.support.index') }}" class="{{ request()->routeIs('admin.support.*') ? 'active' : '' }}">
+                    <span class="admin-nav-label"><i class="fa-solid fa-envelope-open-text"></i> Support</span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </a>
+                <a href="{{ route('admin.newsletters.index') }}" class="{{ request()->routeIs('admin.newsletters.*') ? 'active' : '' }}">
+                    <span class="admin-nav-label"><i class="fa-solid fa-paper-plane"></i> Newsletters</span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </a>
                 <a href="{{ route('admin.reviews.index') }}" class="{{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <span class="admin-nav-label"><i class="fa-solid fa-star"></i> Reviews</span>
                     <i class="fa-solid fa-angle-right"></i>
@@ -86,6 +96,11 @@
         <main class="admin-content">
             <div class="admin-topbar">
                 <div>
+                    <button type="button" class="admin-sidebar-toggle" data-admin-sidebar-toggle aria-controls="adminSidebar" aria-expanded="false" aria-label="Open sidebar">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                     <h1>@yield('heading', 'Admin')</h1>
                     <p>@yield('subheading', 'Manage the Urbanist store from one place.')</p>
                 </div>
@@ -124,6 +139,42 @@
             @endforeach
         </script>
     @endif
+    <script>
+        (() => {
+            const body = document.body;
+            const toggle = document.querySelector('[data-admin-sidebar-toggle]');
+            const closeTargets = document.querySelectorAll('[data-admin-sidebar-close]');
+            const desktopBreakpoint = window.matchMedia('(min-width: 981px)');
+
+            const syncDesktopState = () => {
+                if (desktopBreakpoint.matches) {
+                    body.classList.remove('admin-sidebar-open');
+                    if (toggle) {
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            };
+
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    const isOpen = body.classList.toggle('admin-sidebar-open');
+                    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+
+            closeTargets.forEach((target) => {
+                target.addEventListener('click', () => {
+                    body.classList.remove('admin-sidebar-open');
+                    if (toggle) {
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+
+            desktopBreakpoint.addEventListener('change', syncDesktopState);
+            syncDesktopState();
+        })();
+    </script>
     @stack('scripts')
 </body>
 </html>

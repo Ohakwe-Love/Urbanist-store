@@ -56,13 +56,13 @@
                 <h1 class="product-title">{{ $product->title }}</h1>
                 <div class="rating-container">
                     <div class="stars-con">
-                        <span class="star"><i class="fa-regular fa-star"></i></span>
-                        <span class="star"><i class="fa-regular fa-star"></i></span>
-                        <span class="star"><i class="fa-regular fa-star"></i></span>
-                        <span class="star"><i class="fa-regular fa-star"></i></span>
-                        <span class="star"><i class="fa-regular fa-star"></i></span>
+                        @for ($star = 1; $star <= 5; $star++)
+                            <span class="star">
+                                <i class="{{ $averageRating >= $star ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                            </span>
+                        @endfor
                     </div>
-                    <a href="#reviews" class="review-link"> Reviews</a>
+                    <a href="#reviews" class="review-link">{{ $reviewCount }} {{ \Illuminate\Support\Str::plural('Review', $reviewCount) }}</a>
                 </div>
                 <div class="price">
                     ${{ number_format((float) ($product->sale_price ?? $product->price), 2) }}
@@ -241,67 +241,109 @@
 
                 <div class="tab-panel" id="reviews">
                     <div class="rating-summary">
-                        <div class="rating-number">0.0</div>
+                        <div class="rating-number">{{ number_format($averageRating, 1) }}</div>
                         <div class="stars-con">
-                            <span class="star"><i class="fa-regular fa-star"></i></span>
-                            <span class="star"><i class="fa-regular fa-star"></i></span>
-                            <span class="star"><i class="fa-regular fa-star"></i></span>
-                            <span class="star"><i class="fa-regular fa-star"></i></span>
-                            <span class="star"><i class="fa-regular fa-star"></i></span>
+                            @for ($star = 1; $star <= 5; $star++)
+                                <span class="star"><i class="{{ $averageRating >= $star ? 'fa-solid' : 'fa-regular' }} fa-star"></i></span>
+                            @endfor
                         </div>
 
-                        <div class="rating-count">Based on 0 reviews</div>
+                        <div class="rating-count">Based on {{ $reviewCount }} {{ \Illuminate\Support\Str::plural('review', $reviewCount) }}</div>
                         
                         <div class="rating-breakdown">
-                            <div class="rating-bar">
-                                <div class="rating-label">5 <span class="label-stars"><i class="fa-regular fa-star"></i></span></div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
+                            @foreach ($ratingBreakdown as $rating => $percentage)
+                                <div class="rating-bar">
+                                    <div class="rating-label">{{ $rating }} <span class="label-stars"><i class="fa-regular fa-star"></i></span></div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: {{ $percentage }}%;"></div>
+                                    </div>
+                                    <div class="rating-percent">{{ $percentage }}%</div>
                                 </div>
-                                <div class="rating-percent">0%</div>
-                            </div>
-                        
-                            <div class="rating-bar">
-                                <div class="rating-label">4 <span class="label-stars"><i class="fa-regular fa-star"></i></span></div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
-                                </div>
-                                <div class="rating-percent">0%</div>
-                            </div>
-                        
-                            <div class="rating-bar">
-                                <div class="rating-label">3 <span class="label-stars"><i class="fa-regular fa-star"></i></span></div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
-                                </div>
-                                <div class="rating-percent">0%</div>
-                            </div>
-                        
-                            <div class="rating-bar">
-                                <div class="rating-label">2 <span class="label-stars"><i class="fa-regular fa-star"></i></span></div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
-                                </div>
-                                <div class="rating-percent">0%</div>
-                            </div>
-                        
-                            <div class="rating-bar">
-                                <div class="rating-label">1 <span class="label-stars"><i class="fa-regular fa-star"></i></span></div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
-                                </div>
-                                <div class="rating-percent">0%</div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    
+
+                    @if ($approvedReviews->isNotEmpty())
+                        <div class="review-list">
+                            @foreach ($approvedReviews as $review)
+                                <article class="review-card">
+                                    <div class="review-card-header">
+                                        <div>
+                                            <strong>{{ $review->title ?: 'Verified customer review' }}</strong>
+                                            <div class="review-meta">
+                                                <span>{{ $review->user?->name ?? 'Customer' }}</span>
+                                                <span>{{ $review->created_at->format('M j, Y') }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="review-stars">
+                                            @for ($star = 1; $star <= 5; $star++)
+                                                <i class="{{ $review->rating >= $star ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <p>{{ $review->body }}</p>
+                                </article>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="review-empty-state">
+                            No approved reviews yet. The first genuine buyer review will appear here.
+                        </div>
+                    @endif
+
                     <div class="review-prompt">
                         <div class="prompt-text">
-                        Have you purchased this product? We'd love to hear your thoughts!
+                            Have you purchased this product? Share a review and it will appear here after admin approval.
                         </div>
-                        <button class="review-btn">Write a Review</button>
+
+                        @if ($isAdminSession)
+                            <div class="review-inline-note">Reviews are hidden from admin purchase actions on the storefront.</div>
+                        @elseif (!auth()->check())
+                            <a href="{{ route('login') }}" class="review-btn">Login to review</a>
+                        @elseif (!$canReview)
+                            <div class="review-inline-note">You can review this product after purchasing it with your account.</div>
+                        @else
+                            @if ($userReview)
+                                <div class="review-inline-note">
+                                    Your current review is {{ $userReview->is_approved ? 'approved' : 'pending approval' }}.
+                                    Updating it will send it back for approval.
+                                </div>
+                            @endif
+
+                            <form action="{{ route('reviews.store', $product) }}" method="POST" class="review-form">
+                                @csrf
+                                <div class="review-form-grid">
+                                    <div class="checkout-field">
+                                        <label for="rating">Rating</label>
+                                        <select id="rating" name="rating" required>
+                                            @foreach ([5, 4, 3, 2, 1] as $rating)
+                                                <option value="{{ $rating }}" @selected((int) old('rating', $userReview?->rating ?? 5) === $rating)>
+                                                    {{ $rating }} star{{ $rating > 1 ? 's' : '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('rating') <span class="checkout-error">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label for="title">Review title</label>
+                                        <input type="text" id="title" name="title" value="{{ old('title', $userReview?->title) }}" placeholder="What stood out to you?">
+                                        @error('title') <span class="checkout-error">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+
+                                <div class="checkout-field checkout-field-full">
+                                    <label for="body">Your review</label>
+                                    <textarea id="body" name="body" rows="5" placeholder="Tell other customers about the quality, comfort, finish, and delivery experience." required>{{ old('body', $userReview?->body) }}</textarea>
+                                    @error('body') <span class="checkout-error">{{ $message }}</span> @enderror
+                                </div>
+
+                                <button type="submit" class="review-btn">
+                                    {{ $userReview ? 'Update Review' : 'Submit Review' }}
+                                </button>
+                            </form>
+                        @endif
                     </div>
-                    {{-- <p>Customer reviews will appear here. This section would typically include a list of customer reviews, ratings, and the ability to submit a new review.</p> --}}
                 </div>
 
                 {{-- <div class="tab-panel" id="delivery">

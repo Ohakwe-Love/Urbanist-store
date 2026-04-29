@@ -162,7 +162,7 @@
 
         <div class="contact-info">
             <p>If you have any questions about our use of cookies, please contact us at:</p>
-            <p>Email: <a href="mailto:privacy@yourstore.com">privacy@yourstore.com</a></p>
+            <p>Email: <a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
             <p>Phone: +1 (555) 123-4567</p>
         </div>
 

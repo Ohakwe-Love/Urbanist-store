@@ -67,14 +67,14 @@
                 </div>
 
                 @if ($recentOrders->isEmpty())
-                    <div class="empty-state">Orders will show up here once checkout is connected.</div>
+                    <div class="empty-state">No orders have been placed yet.</div>
                 @else
                     <div class="metric-list">
                         @foreach ($recentOrders as $order)
                             <div>
                                 <div>
                                     <strong>{{ $order->order_number }}</strong>
-                                    <div class="helper-text">{{ $order->user?->name ?? 'Guest checkout' }}</div>
+                                    <div class="helper-text">{{ $order->user?->name ?? 'Customer account unavailable' }}</div>
                                 </div>
                                 <div>
                                     <span class="badge badge-neutral">{{ ucfirst($order->status) }}</span>

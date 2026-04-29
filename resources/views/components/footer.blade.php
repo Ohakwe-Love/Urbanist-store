@@ -1,4 +1,13 @@
 <footer>
+    @php
+        $socialLinks = array_filter([
+            ['label' => 'Facebook', 'icon' => 'fab fa-facebook-f', 'url' => $storeSettings['facebook_url'] ?? ''],
+            ['label' => 'Pinterest', 'icon' => 'fab fa-pinterest-p', 'url' => $storeSettings['pinterest_url'] ?? ''],
+            ['label' => 'Instagram', 'icon' => 'fab fa-instagram', 'url' => $storeSettings['instagram_url'] ?? ''],
+            ['label' => 'Twitter', 'icon' => 'fab fa-twitter', 'url' => $storeSettings['twitter_url'] ?? ''],
+            ['label' => 'TikTok', 'icon' => 'fab fa-tiktok', 'url' => $storeSettings['tiktok_url'] ?? ''],
+        ], fn ($link) => filled($link['url']));
+    @endphp
     <div class="footer-content">
         <div class="footer-section">
             <h3>CONTACT US</h3>
@@ -13,11 +22,11 @@
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <p class="contact-text">{{ $storeSettings['contact_email'] }}</p>
+                    <p class="contact-text"><a href="mailto:{{ $storeSettings['contact_email'] }}">{{ $storeSettings['contact_email'] }}</a></p>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-calendar"></i>
-                    <p class="contact-text">Monday to Saturday, 9am to 7pm EST</p>
+                    <p class="contact-text">{{ $storeSettings['business_hours'] }}</p>
                 </div>
             </div>
         </div>
@@ -25,8 +34,8 @@
         <div class="footer-section">
             <h3>HELP</h3>
             <ul class="footer-links">
-            <li><a href="#">Help Center</a></li>
-            <li><a href="#">Shipping Info</a></li>
+            <li><a href="{{ route('help-center') }}">Help Center</a></li>
+            <li><a href="{{ route('how-to-order') }}">Shipping Info</a></li>
             <li><a href="{{route('returns')}}">Returns</a></li>
             <li><a href="{{route('how-to-order')}}">How To Order</a></li>
             <li><a href="{{route(name: 'cookies')}}">Cookies</a></li>
@@ -38,28 +47,30 @@
             <h3>COMPANY</h3>
             <ul class="footer-links">
                 <li><a href="{{route('about')}}">About Us</a></li>
+                <li><a href="{{ route('services') }}">Services</a></li>
                 <li><a href="{{route('offer')}}">Offers</a></li>
-                <li><a href="{{route('news')}}">News Update </a></li>
-                <li><a href="#">Store Locations</a></li>
-                <li><a href="#">Testimonial</a></li>
-                <li><a href="#">Sitemap</a></li>
+                <li><a href="{{route('news')}}">News Update</a></li>
+                <li><a href="{{ route('contact') }}">Contact Us</a></li>
             </ul>
         </div>
     
         <div class="footer-section">
             <h3>NEWSLETTER</h3>
             <p>Get 15% off your first purchases! Plus, be the first to know about sales new product launches and exclusive offers!</p>
-            <div class="newsletter-form">
-                <input type="email" placeholder="Your Email Address">
+            <form action="{{ route('newsletter.store') }}" method="POST" class="newsletter-form">
+                @csrf
+                <input type="email" name="email" placeholder="Your Email Address" value="{{ old('email') }}" aria-label="Newsletter email">
                 <button type="submit"><i class="fas fa-arrow-right"></i></button>
-            </div>
-            <div class="socials">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-tiktok"></i></a>
-            </div>
+            </form>
+            @if ($socialLinks)
+                <div class="socials">
+                    @foreach ($socialLinks as $link)
+                        <a href="{{ $link['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $link['label'] }}">
+                            <i class="{{ $link['icon'] }}"></i>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
 

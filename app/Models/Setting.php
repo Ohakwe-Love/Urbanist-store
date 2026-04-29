@@ -21,6 +21,12 @@ class Setting extends Model
             'contact_email' => 'hello@urbanist-store.com',
             'phone_number' => '+1 (212) 555-0148',
             'address' => '245 Mercer Street, SoHo, New York, NY 10012',
+            'business_hours' => 'Monday to Saturday, 9am to 7pm EST',
+            'facebook_url' => '',
+            'pinterest_url' => '',
+            'instagram_url' => '',
+            'twitter_url' => '',
+            'tiktok_url' => '',
             'payment_gateway_keys' => 'Stripe live and Paystack production credentials are managed securely outside source control.',
             'shipping_settings' => 'Standard delivery in 3-5 business days, express delivery in 1-2 business days, and white-glove delivery for oversized furniture in select cities.',
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\ContentBlock;
 use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
 use App\Services\CartService;
@@ -24,18 +25,35 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share cart data with all views
         View::composer('*', CartComposer::class);
+        View::composer('*', function ($view) {
+            $storeSettings = Setting::defaults();
 
-        $storeSettings = Setting::defaults();
+            if (Schema::hasTable('settings')) {
+                $storeSettings = array_merge(
+                    $storeSettings,
+                    Setting::query()->pluck('value', 'key')->toArray()
+                );
+            }
 
-        if (Schema::hasTable('settings')) {
-            $storeSettings = array_merge(
-                $storeSettings,
-                Setting::query()->pluck('value', 'key')->toArray()
-            );
-        }
+            $contentBlocks = ContentBlock::defaults();
 
-        View::share('storeSettings', $storeSettings);
+            if (Schema::hasTable('content_blocks')) {
+                foreach (ContentBlock::query()->get() as $block) {
+                    $contentBlocks[$block->key] = array_merge(
+                        $contentBlocks[$block->key] ?? ['meta' => []],
+                        [
+                            'title' => $block->title,
+                            'content' => $block->content,
+                            'meta' => is_array($block->meta) ? $block->meta : [],
+                            'is_active' => $block->is_active,
+                        ]
+                    );
+                }
+            }
+
+            $view->with('storeSettings', $storeSettings);
+            $view->with('contentBlocks', $contentBlocks);
+        });
     }
 }

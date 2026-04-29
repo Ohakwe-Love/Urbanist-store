@@ -14,6 +14,9 @@ use App\Http\Controllers\User\PasswordResetController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\CheckoutController;
+use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\User\PaymentController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsController;
 
 // Public routes
@@ -28,6 +31,10 @@ Route::get('/services', [PageController::class, 'services'])->name('services');
 
 // contact page route
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact', [PageController::class, 'submitContact'])->name('contact.submit');
+
+// help center route
+Route::get('/help-center', [PageController::class, 'helpCenter'])->name('help-center');
 
 // offer page route
 Route::get('/offer', [PageController::class, 'offer'])->name('offer');
@@ -92,6 +99,7 @@ Route::middleware('guest.customer')->group(function () {
 
 // logout route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 Route::get('/checkout/paystack/callback', [CheckoutController::class, 'callback'])->name('checkout.callback');
 Route::post('/payments/paystack/webhook', [CheckoutController::class, 'webhook'])->name('payments.paystack.webhook');
@@ -119,10 +127,12 @@ Route::middleware('customer')->prefix('user')->group(function () {
     // Route::get('/addresses', [AddressController::class, 'index'])->name('addresses');
     // Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
 
     Route::get('/profile/edit', [ProfileController::class, 'showProfileEditForm'])->name('profileEdit');
     
     Route::put('/profile/update', [ProfileController::class, 'updateProfile'])->name('updateProfile');
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     
     // Checkout routes would go here
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');

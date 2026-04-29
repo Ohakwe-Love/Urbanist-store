@@ -14,16 +14,16 @@ class ContentBlockController extends Controller
     {
         $search = trim($request->string('search')->toString());
 
-        $defaults = [
-            'home_banner' => 'Homepage banner',
-            'promotional_section' => 'Promotional section',
-            'featured_collections' => 'Featured collections',
-            'about_page_content' => 'About page content',
-            'contact_details' => 'Contact details',
-        ];
-
-        foreach ($defaults as $key => $title) {
-            ContentBlock::firstOrCreate(['key' => $key], ['title' => $title, 'is_active' => true]);
+        foreach (ContentBlock::defaults() as $key => $default) {
+            ContentBlock::firstOrCreate(
+                ['key' => $key],
+                [
+                    'title' => $default['title'],
+                    'content' => $default['content'],
+                    'meta' => $default['meta'],
+                    'is_active' => $default['is_active'],
+                ]
+            );
         }
 
         return view('admin.content.index', [

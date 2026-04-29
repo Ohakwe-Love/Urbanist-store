@@ -1,30 +1,37 @@
 <x-layout>
+    @php
+        $defaultBlocks = \App\Models\ContentBlock::defaults();
+        $homeBanner = ($contentBlocks['home_banner']['is_active'] ?? true) ? ($contentBlocks['home_banner'] ?? $defaultBlocks['home_banner']) : $defaultBlocks['home_banner'];
+        $promoBlock = ($contentBlocks['promotional_section']['is_active'] ?? true) ? ($contentBlocks['promotional_section'] ?? $defaultBlocks['promotional_section']) : $defaultBlocks['promotional_section'];
+        $featuredBlock = ($contentBlocks['featured_collections']['is_active'] ?? true) ? ($contentBlocks['featured_collections'] ?? $defaultBlocks['featured_collections']) : $defaultBlocks['featured_collections'];
+    @endphp
+
     <!-- hero -->
     <section class="hero-container">
         <!-- Slide 1 -->
         <div class="hero-slide slide1 active">
             <div class="slide-content">
-                <h1 class="slide-title">Sleeper Sofas</h1>
-                <p class="slide-subtitle">New arrivals with comfort and style for your living space</p>
-                <a href="{{route('shop')}}" class="shop-btn">Shop Now</a>
+                <h1 class="slide-title">{{ $homeBanner['title'] }}</h1>
+                <p class="slide-subtitle">{{ $homeBanner['content'] }}</p>
+                <a href="{{route('shop')}}" class="shop-btn">{{ $homeBanner['meta']['cta_label'] ?? 'Shop Now' }}</a>
             </div>
         </div>
         
         <!-- Slide 2 -->
         <div class="hero-slide slide2">
             <div class="slide-content">
-                <h1 class="slide-title">Fabric Sofas</h1>
-                <p class="slide-subtitle">Fabric sofas for stylish living rooms</p>
-                <a href="{{route('shop')}}" class="shop-btn">Shop Now</a>
+                <h1 class="slide-title">{{ $homeBanner['meta']['slide_two_title'] ?? 'Fabric Sofas' }}</h1>
+                <p class="slide-subtitle">{{ $homeBanner['meta']['slide_two_content'] ?? 'Fabric sofas for stylish living rooms' }}</p>
+                <a href="{{route('shop')}}" class="shop-btn">{{ $homeBanner['meta']['cta_label'] ?? 'Shop Now' }}</a>
             </div>
         </div>
         
         <!-- Slide 3 -->
         <div class="hero-slide slide3">
             <div class="slide-content">
-                <h1 class="slide-title">Arm Chair</h1>
-                <p class="slide-subtitle">Create your perfect sanctuary with our exclusive collection</p>
-                <a href="{{route('shop')}}" class="shop-btn">Shop Now</a>
+                <h1 class="slide-title">{{ $homeBanner['meta']['slide_three_title'] ?? 'Arm Chair' }}</h1>
+                <p class="slide-subtitle">{{ $homeBanner['meta']['slide_three_content'] ?? 'Create your perfect sanctuary with our exclusive collection' }}</p>
+                <a href="{{route('shop')}}" class="shop-btn">{{ $homeBanner['meta']['cta_label'] ?? 'Shop Now' }}</a>
             </div>
         </div>
 
@@ -65,8 +72,8 @@
     <!-- featured collections -->
     <section class="featured-collections">
         <div class="section-header">
-            <h2>featured collections</h2>
-            <p>Shop our best selling collections for a range of styles loved by you.</p>
+            <h2>{{ $featuredBlock['title'] }}</h2>
+            <p>{{ $featuredBlock['content'] }}</p>
         </div>
 
         <div class="featured-collections-grid">
@@ -103,16 +110,16 @@
         <div class="new-arrivals-grid-col">
             <div class="new-arrivals-grid-col-img"><img src="{{asset('assets/images/new-arrivals/new-1.webp')}}" alt=""></div>
             <div class="new-arrivals-grid-col-text">
-                <h2>New arrivals</h2>
-                <p>Discover the latest trends and styles in home decor.</p>
+                <h2>{{ $promoBlock['title'] }}</h2>
+                <p>{{ $promoBlock['content'] }}</p>
                 <a href="{{route('shop')}}" class="shop-btn">Shop Now</a>   
             </div>
         </div>
         <div class="new-arrivals-grid-col">
             <div class="new-arrivals-grid-col-img"><img src="{{asset('assets/images/new-arrivals/new-2.webp')}}" alt=""></div>
             <div class="new-arrivals-grid-col-text">
-                <h2>Top trending</h2>
-                <p>Explore our top trending products that are loved by our customers.</p>
+                <h2>{{ $promoBlock['meta']['secondary_title'] ?? 'Top trending' }}</h2>
+                <p>{{ $promoBlock['meta']['secondary_content'] ?? 'Explore our top trending products that are loved by our customers.' }}</p>
                 <a href="{{route('shop')}}" class="shop-btn">Shop Now</a>   
             </div>
         </div>

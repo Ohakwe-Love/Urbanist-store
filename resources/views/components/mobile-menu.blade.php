@@ -1,6 +1,13 @@
 <div class="mobile-menu" id="mobile-menu">
     @php
         $isAdminSession = auth('admin')->check();
+        $socialLinks = array_filter([
+            ['label' => 'Facebook', 'icon' => 'fab fa-facebook-f', 'url' => $storeSettings['facebook_url'] ?? ''],
+            ['label' => 'Pinterest', 'icon' => 'fab fa-pinterest-p', 'url' => $storeSettings['pinterest_url'] ?? ''],
+            ['label' => 'Instagram', 'icon' => 'fab fa-instagram', 'url' => $storeSettings['instagram_url'] ?? ''],
+            ['label' => 'Twitter', 'icon' => 'fab fa-twitter', 'url' => $storeSettings['twitter_url'] ?? ''],
+            ['label' => 'TikTok', 'icon' => 'fab fa-tiktok', 'url' => $storeSettings['tiktok_url'] ?? ''],
+        ], fn ($link) => filled($link['url']));
     @endphp
 
     <div class="mobile-menu-header">
@@ -9,10 +16,11 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-    
+
     <div class="mobile-menu-nav">
         <a href="{{ route('home') }}" class="active">Home</a>
         <a href="{{ route('about') }}">About</a>
+        <a href="{{ route('services') }}">Services</a>
         <a href="{{ route('offer') }}">Offer</a>
         <a href="{{ route('shop') }}">Shop</a>
         <a href="{{ route('news') }}">Blog</a>
@@ -23,7 +31,6 @@
         @endif
     </div>
 
-    <!-- Contact us -->
     <div class="mobile-menu-contact">
         <p>
             Call Us: {{ $storeSettings['phone_number'] }}
@@ -31,12 +38,14 @@
 
         <p>Email: {{ $storeSettings['contact_email'] }}</p>
 
-        <div class="socials">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-pinterest-p"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
-        </div>
+        @if ($socialLinks)
+            <div class="socials">
+                @foreach ($socialLinks as $link)
+                    <a href="{{ $link['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $link['label'] }}">
+                        <i class="{{ $link['icon'] }}"></i>
+                    </a>
+                @endforeach
+            </div>
+        @endif
     </div>
 </div>

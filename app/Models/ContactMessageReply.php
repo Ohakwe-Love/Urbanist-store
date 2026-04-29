@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ContactMessageReply extends Model
+{
+    protected $fillable = [
+        'contact_message_id',
+        'admin_id',
+        'body',
+        'emailed_at',
+    ];
+
+    protected $casts = [
+        'emailed_at' => 'datetime',
+    ];
+
+    public function contactMessage()
+    {
+        return $this->belongsTo(ContactMessage::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
+}

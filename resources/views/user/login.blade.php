@@ -10,22 +10,6 @@
             </a>  
             <h2>Login to your Account</h2> 
 
-            <div class="social-login">
-                <a href="" class="social-btn facebook-btn">
-                    <img src="{{asset('assets/images/socials/facebook.svg')}}" alt="">
-                </a>
-                <a href="" class="social-btn google-btn">
-                    <img src="{{asset('assets/images/socials/google.svg')}}" alt="">
-                </a>
-                <a href="" class="social-btn linkedin-btn">
-                    <img src="{{asset('assets/images/socials/linkedin.svg')}}" alt="">
-                </a>
-            </div>
-
-            <div class="divider">
-                <span>or</span>
-            </div>
-
             <div class="input-row">
                 <div class="input-group span2">
                     <label for="login">Enter Email or Username</label>

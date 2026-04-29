@@ -88,6 +88,49 @@ class ProductController extends Controller
     {
         abort_unless($product->isVisibleOnStorefront(), 404);
 
-        return view('products.show', compact('product'));
+        $product->load([
+            'images',
+            'specifications',
+            'reviews' => fn ($query) => $query
+                ->where('is_approved', true)
+                ->with('user')
+                ->latest(),
+        ]);
+
+        $approvedReviews = $product->reviews;
+        $reviewCount = $approvedReviews->count();
+        $averageRating = $reviewCount > 0 ? round((float) $approvedReviews->avg('rating'), 1) : 0.0;
+        $ratingBreakdown = collect(range(5, 1))
+            ->mapWithKeys(fn (int $rating) => [
+                $rating => $reviewCount > 0
+                    ? (int) round(($approvedReviews->where('rating', $rating)->count() / $reviewCount) * 100)
+                    : 0,
+            ]);
+
+        $userReview = null;
+        $canReview = false;
+
+        if (auth()->check()) {
+            $userReview = $product->reviews()
+                ->withoutGlobalScopes()
+                ->where('user_id', auth()->id())
+                ->latest()
+                ->first();
+
+            $canReview = auth()->user()->orders()
+                ->where('payment_status', 'paid')
+                ->whereHas('items', fn ($query) => $query->where('product_id', $product->id))
+                ->exists();
+        }
+
+        return view('products.show', compact(
+            'product',
+            'approvedReviews',
+            'reviewCount',
+            'averageRating',
+            'ratingBreakdown',
+            'userReview',
+            'canReview'
+        ));
     }
 }
